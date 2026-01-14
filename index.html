@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Molecular Odyssey | Davy Blaser</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+    <canvas id="molecular-canvas"></canvas>
+    
+    <div id="flash-overlay"></div>
+
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="#home" class="nav-item active">Home</a></li>
+            <li><a href="#projects" class="nav-item">Works</a></li>
+            <li><a href="#journey" class="nav-item">Journey</a></li>
+            <li><a href="#skills" class="nav-item">Skills</a></li>
+            <li><a href="#about" class="nav-item">About Me</a></li>
+        </ul>
+        <div class="burger">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero-section">
+        <div class="hero-content">
+            <h1 class="main-title">MY MOLECULAR <br>ODYSSEY</h1>
+            <div class="typewriter-container">
+                <span id="typing-text"></span><span class="cursor">|</span>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Explore</span>
+            <div class="mouse"><div class="wheel"></div></div>
+        </div>
+    </section>
+
+    <section id="projects" class="section">
+        <div class="container fade-up">
+            <h2 class="section-title">The Laboratory</h2>
+            <div class="carousel-wrapper">
+                <div class="carousel-container">
+                    
+                    <article class="project-card open-modal" data-target="modal-A">
+                        <div class="card-art art-organic"><div class="art-overlay"></div></div>
+                        <div class="card-content">
+                            <span class="badge red">Master 1 | Chemistry</span>
+                            <h3>Synthèse Continue</h3>
+                            <p>Immersion & Optimisation</p>
+                        </div>
+                    </article>
+
+                    <article class="project-card open-modal" data-target="modal-B">
+                        <div class="card-art art-bubbles"><div class="art-overlay"></div></div>
+                        <div class="card-content">
+                            <span class="badge blue">L3 | Polymers</span>
+                            <h3>Ionic Gelation</h3>
+                            <p>Encapsulation & Hydrogel</p>
+                        </div>
+                    </article>
+
+                    <article class="project-card open-modal" data-target="modal-C">
+                        <div class="card-art art-crystal"><div class="art-overlay"></div></div>
+                        <div class="card-content">
+                            <span class="badge orange">L3 | Materials</span>
+                            <h3>Synthesis & Sintering</h3>
+                            <p>Céramique & Haute Température</p>
+                        </div>
+                    </article>
+
+                    <article class="project-card open-modal" data-target="modal-D">
+                        <div class="card-art art-tech"><div class="art-overlay"></div></div>
+                        <div class="card-content">
+                            <span class="badge green">IT | Engineering</span>
+                            <h3>Custom Hardware & NAS</h3>
+                            <p>Architecture Système & Réseau</p>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+            <p class="drag-hint"><i class="fas fa-hand-pointer"></i> Slide to explore</p>
+        </div>
+    </section>
+
+    <section id="journey" class="section bg-darker">
+        <div class="container">
+            <h2 class="section-title fade-up">The Journey</h2>
+            <div class="timeline">
+                <div class="timeline-scroll-line"></div>
+
+                <div class="timeline-row left scroll-trigger">
+                    <div class="timeline-content">
+                        <span class="date">2025 - Présent</span>
+                        <h3>Architecting the Future (Master 1)</h3>
+                        <p>Aujourd'hui, au cœur du pôle d'excellence de Strasbourg, je ne regarde pas en arrière avec regret, mais avec reconnaissance.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-row right scroll-trigger">
+                    <div class="timeline-content">
+                        <span class="date">2024</span>
+                        <h3>The Scientific Baptism (Stage L3)</h3>
+                        <p>Le passage de l'étudiant au chercheur. Défendre mes propres résultats devant un comité scientifique a été une révélation.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-row left scroll-trigger">
+                    <div class="timeline-content">
+                        <div class="job-branch left-side">
+                            <div class="job-node">
+                                <i class="fas fa-briefcase"></i>
+                                <div class="job-tooltip">
+                                    <h4>Job Étudiant (Manor)</h4>
+                                    <p>Travail en parallèle des études. Développement de l'autonomie et gestion du stress.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <span class="date">2021 - 2024</span>
+                        <h3>The Forge of Resilience (Licence)</h3>
+                        <p>Après un début facilité, la réalité de la Licence m'a imposé un défi. J'ai exploré l'informatique et l'électronique.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-row right scroll-trigger">
+                    <div class="timeline-content">
+                        <span class="date">2020</span>
+                        <h3>The Genesis of Curiosity (BAC)</h3>
+                        <p>Plus qu'un diplôme, ce fut le point de départ d'une fascination pour les fondements de la matière.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="section">
+        <div class="container fade-up">
+            <h2 class="section-title">The Arsenal</h2>
+            
+            <div class="lab-bench-wrapper" id="lab-bench">
+                <div class="lab-wall"></div><div class="lab-surface"></div>
+                
+                <div class="lab-decor-left">
+                    <div class="deco-bottle"><div class="bottle-label">HCL</div></div>
+                    <div class="deco-beaker"><div class="beaker-liquid"></div><div class="beaker-bubbles"></div></div>
+                </div>
+                <div class="lab-decor-right">
+                    <div class="tube-rack">
+                        <div class="test-tube t1"><div class="tt-liquid red"></div></div>
+                        <div class="test-tube t2"><div class="tt-liquid blue"></div></div>
+                        <div class="test-tube t3"><div class="tt-liquid green"></div></div>
+                    </div>
+                </div>
+
+                <div class="draggable-candle" id="candle">
+                    <div class="candle-flame"></div><div class="candle-wick"></div><div class="candle-wax"></div>
+                </div>
+
+                <div class="erlenmeyer-container" id="erlenmeyer">
+                    <div class="flask-rim"></div><div class="flask-neck"></div>
+                    <div class="flask-body">
+                        <div class="graduations"></div>
+                        <div class="liquid" id="flask-liquid">
+                             <div class="bubble" data-key="synthesis">Synthesis</div>
+                             <div class="bubble" data-key="analysis">Analysis</div>
+                             <div class="bubble" data-key="polymers">Polymers</div>
+                             <div class="bubble" data-key="materials">Materials</div>
+                             <div class="bubble" data-key="hardware">Hardware</div>
+                             <div class="bubble" data-key="network">Network</div>
+                             <div class="bubble" data-key="softwares">Softwares</div>
+                             <div class="bubble" data-key="english">English</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tripod"><div class="tripod-ring"></div><div class="tripod-leg left"></div><div class="tripod-leg right"></div></div>
+                
+                <div class="bunsen-container" id="bunsen-burner">
+                    <div class="bunsen-trigger" id="bunsen-trigger"></div>
+                    <div class="flame-assembly" id="bunsen-flame"><div class="flame-main"></div><div class="flame-inner"></div></div>
+                    <div class="bunsen-tube"></div><div class="bunsen-base"></div>
+                </div>
+
+                <div class="experiment-ui">
+                    <div class="heat-timer" id="heatTimer"><span id="timerValue">5.0</span>s</div>
+                    <button id="reset-flask-btn" class="btn btn-primary" style="display: none;"><i class="fas fa-tools"></i> Réparer le laboratoire</button>
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 20px; color: #666;">* Utilisez la bougie pour allumer le bec Bunsen ! Cliquez sur une bulle pour voir les preuves.</p>
+        </div>
+    </section>
+
+    <section id="about" class="section">
+        <div class="container fade-up">
+            <h2 class="section-title">The Persona</h2>
+            <div class="persona-card">
+                <div class="persona-visual">
+                    <div class="profile-frame">
+                        <div class="about-img-placeholder"></div>
+                        <div class="frame-corner c1"></div><div class="frame-corner c2"></div>
+                        <div class="frame-corner c3"></div><div class="frame-corner c4"></div>
+                    </div>
+                    <div class="persona-status">
+                        <div class="status-item"><i class="fas fa-map-marker-alt"></i> Strasbourg, FR</div>
+                        <div class="status-item"><i class="fas fa-university"></i> Master 1</div>
+                        <div class="status-item available"><span class="dot"></span> Open to Work</div>
+                    </div>
+                </div>
+                <div class="persona-content">
+                    <h3 class="role-title">Chimiste Moléculaire & <span class="accent-text">Tech Enthusiast</span></h3>
+                    <p class="bio-text">Naviguer entre la rigueur de la <strong>synthèse organique</strong> et la logique de l'<strong>ingénierie informatique</strong> définit mon approche scientifique. Mon parcours atypique est ma plus grande force.</p>
+                    <div class="info-grid">
+                        <div class="info-block">
+                            <h4><i class="fas fa-brain"></i> Soft Skills</h4>
+                            <div class="skill-tags"><span>Autonomie</span><span>Résolution</span><span>Leadership</span><span>Adaptabilité</span></div>
+                        </div>
+                        <div class="info-block">
+                            <h4><i class="fas fa-heart"></i> Passions</h4>
+                            <ul class="passion-list">
+                                <li><i class="fas fa-futbol"></i> Football (18 ans)</li>
+                                <li><i class="fas fa-microchip"></i> PC Building</li>
+                                <li><i class="fas fa-rocket"></i> Space Exploration</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="cv-action">
+                        <a href="#" class="btn btn-primary btn-glow"><i class="fas fa-file-download"></i> Télécharger mon CV</a>
+                        <span class="cv-info">Format PDF - Mis à jour 2026</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="footer-bg-grid"></div>
+        <div class="footer-content-wrapper">
+            <div class="footer-col brand-col">
+                <div class="logo">Davy<span class="accent">.</span>Blaser</div>
+                <p class="footer-tagline">Architecting Matter. Engineering Systems.</p>
+                <p class="footer-desc">Portfolio académique retraçant mon parcours à l'interface de la chimie et du numérique.</p>
+            </div>
+            <div class="footer-col nav-col">
+                <h4>Navigation</h4>
+                <ul><li><a href="#home">Accueil</a></li><li><a href="#projects">Projets</a></li><li><a href="#journey">Parcours</a></li><li><a href="#skills">Compétences</a></li></ul>
+            </div>
+            <div class="footer-col contact-col">
+                <h4>Contact</h4>
+                <a href="mailto:Davy.Blaser@example.com" class="contact-link"><i class="fas fa-envelope"></i> Davy.Blaser@example.com</a>
+                <div class="social-icons">
+                    <a href="#" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-github"></i></a>
+                </div>
+                <p class="location"><i class="fas fa-map-pin"></i> Strasbourg, France</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Davy Blaser. Tous droits réservés.</p>
+            <p>Designed with <i class="fas fa-flask"></i> & <i class="fas fa-code"></i></p>
+        </div>
+    </footer>
+
+    <div id="modal-skill" class="modal-overlay">
+        <div class="modal-wrapper" style="max-width: 600px;">
+            <button class="modal-close">&times;</button>
+            <div class="modal-header">
+                <h2 id="skill-modal-title">Titre</h2>
+                <span class="modal-tag">Compétence Clé</span>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <p id="skill-modal-desc" style="text-align: left; margin-bottom: 20px;">Description...</p>
+                <div class="proof-container">
+                    <h4><i class="fas fa-microscope"></i> Preuve :</h4>
+                    <img id="skill-proof-img" src="" alt="Preuve" style="width: 100%; max-height: 300px; object-fit: contain; border-radius: 8px; border: 1px solid #333;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-A" class="modal-overlay">
+        <div class="modal-wrapper">
+            <button class="modal-close">&times;</button>
+            <div class="modal-hero" style="background-image: url('https://images.unsplash.com/photo-1614726365723-49cfa2728637?q=80&w=1200&auto=format&fit=crop');">
+                <div class="hero-overlay"></div>
+                <div class="hero-text"><span class="modal-tag red">Chimie Organique</span><h2>Synthèse Continue</h2></div>
+            </div>
+            <div class="modal-scroll-content">
+                <div class="modal-grid">
+                    <div class="modal-main">
+                        <div class="content-block"><h3>Contexte</h3><p>Optimisation d'un protocole multi-étapes sur 2 semaines.</p></div>
+                        <div class="content-block"><h3>Challenge</h3><p>Gestion de la pureté sans purification intermédiaire.</p></div>
+                        <div class="project-gallery">
+                            <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=400&auto=format&fit=crop">
+                            <img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=400&auto=format&fit=crop">
+                        </div>
+                    </div>
+                    <div class="modal-sidebar">
+                        <div class="tech-box"><h4>Outils</h4><div class="tag-cloud"><span>RMN</span><span>IR</span><span>Schlenk</span></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-B" class="modal-overlay">
+        <div class="modal-wrapper">
+            <button class="modal-close">&times;</button>
+            <div class="modal-hero" style="background-image: url('https://images.unsplash.com/photo-1506152983158-b4a74a01c721?q=80&w=1200&auto=format&fit=crop');">
+                <div class="hero-overlay"></div>
+                <div class="hero-text"><span class="modal-tag blue">Polymères</span><h2>Ionic Gelation</h2></div>
+            </div>
+            <div class="modal-scroll-content">
+                <div class="modal-grid">
+                    <div class="modal-main"><p>Étude de la réticulation de l'alginate pour l'encapsulation.</p></div>
+                    <div class="modal-sidebar"><div class="tech-box"><h4>Outils</h4><div class="tag-cloud"><span>Alginate</span><span>CaCl2</span></div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-C" class="modal-overlay">
+        <div class="modal-wrapper">
+            <button class="modal-close">&times;</button>
+            <div class="modal-hero" style="background-image: url('https://images.unsplash.com/photo-1516981879613-9f5da904015f?q=80&w=1200&auto=format&fit=crop');">
+                <div class="hero-overlay"></div>
+                <div class="hero-text"><span class="modal-tag orange">Matériaux</span><h2>Sintering</h2></div>
+            </div>
+            <div class="modal-scroll-content">
+                <div class="modal-grid">
+                    <div class="modal-main"><p>Synthèse céramique et frittage haute température.</p></div>
+                    <div class="modal-sidebar"><div class="tech-box"><h4>Outils</h4><div class="tag-cloud"><span>Four 1500°C</span><span>DRX</span></div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-D" class="modal-overlay">
+        <div class="modal-wrapper">
+            <button class="modal-close">&times;</button>
+            <div class="modal-hero" style="background-image: url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop');">
+                <div class="hero-overlay"></div>
+                <div class="hero-text"><span class="modal-tag green">IT</span><h2>Hardware & NAS</h2></div>
+            </div>
+            <div class="modal-scroll-content">
+                <div class="modal-grid">
+                    <div class="modal-main"><p>Conception serveur NAS et RAID 5 sous Linux.</p></div>
+                    <div class="modal-sidebar"><div class="tech-box"><h4>Stack</h4><div class="tag-cloud"><span>Linux</span><span>ZFS</span><span>Hardware</span></div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

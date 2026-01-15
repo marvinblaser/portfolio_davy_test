@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- TRES IMPORTANT -->
     <title>Molecular Odyssey | Davy Blaser</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
@@ -10,26 +10,26 @@
 </head>
 <body>
 
-    <!-- ==================== PRELOADER (AMÉLIORATION 1) ==================== -->
+    <!-- PRELOADER -->
     <div id="preloader">
         <div class="loader-content">
             <div class="loader-flask">
                 <div class="loader-liquid"></div>
-                <div class="loader-bubbles">
-                    <span></span><span></span><span></span>
-                </div>
+                <div class="loader-bubbles"><span></span><span></span><span></span></div>
             </div>
             <p class="loader-text">Initialisation des réactifs...</p>
         </div>
     </div>
 
-    <!-- ==================== BACKGROUND & NAV ==================== -->
+    <!-- BACKGROUND -->
     <canvas id="molecular-canvas"></canvas>
     <div id="flash-overlay"></div>
 
+    <!-- NAVBAR -->
     <nav class="navbar">
+        <div class="logo-mobile">Davy<span class="accent">.</span>Blaser</div> <!-- Ajout Logo Mobile -->
         <ul class="nav-links">
-            <li><a href="#home" class="nav-item active">Home</a></li>
+            <li><a href="#home" class="nav-item">Home</a></li>
             <li><a href="#projects" class="nav-item">Works</a></li>
             <li><a href="#journey" class="nav-item">Journey</a></li>
             <li><a href="#skills" class="nav-item">Skills</a></li>
@@ -37,7 +37,9 @@
             <li><a href="#gallery" class="nav-item">Life</a></li>
         </ul>
         <div class="burger">
-            <div class="line"></div><div class="line"></div><div class="line"></div>
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
         </div>
     </nav>
 

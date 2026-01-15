@@ -1,15 +1,15 @@
-// --- 0. PRELOADER (AMÉLIORATION 1) ---
+// --- 0. PRELOADER ---
 window.addEventListener('load', () => {
     const preloader = document.getElementById('preloader');
     if(preloader) {
         setTimeout(() => {
             preloader.classList.add('loaded');
-            typeEffect(); // Lancer l'animation du texte après
+            typeEffect(); 
         }, 800);
     }
 });
 
-// --- EASTER EGG (AMÉLIORATION 5) ---
+// --- EASTER EGG ---
 const secretCode = ['h', '2', 'o'];
 let secretIndex = 0;
 document.addEventListener('keydown', (e) => {
@@ -24,7 +24,7 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// --- 1. CANVAS (PARTICLES & COMETS) ---
+// --- 1. CANVAS ---
 const canvas = document.getElementById('molecular-canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
@@ -134,17 +134,17 @@ slider.addEventListener('mousemove', (e) => {
   const walk = (x - startX) * 2; slider.scrollLeft = scrollLeft - walk;
 });
 
-// --- 4. SCROLL ANIMATIONS ---
+// --- 4. SCROLL ANIMATIONS & SPY ---
 const scrollObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-        }
-    });
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
 }, { threshold: 0.1 });
 document.querySelectorAll('.scroll-trigger, .fade-up').forEach(el => scrollObserver.observe(el));
 
+const sections = document.querySelectorAll('section');
+const navLinks = document.querySelectorAll('.nav-links a');
+
 window.addEventListener('scroll', () => {
+    // Timeline Scroll Line
     const timeline = document.querySelector('.timeline');
     const scrollLine = document.querySelector('.timeline-scroll-line');
     if(timeline && scrollLine) {
@@ -155,6 +155,22 @@ window.addEventListener('scroll', () => {
         percentage = Math.max(0, Math.min(1, percentage));
         scrollLine.style.height = `${percentage * 100}%`;
     }
+
+    // Scroll Spy
+    let current = '';
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+            current = section.getAttribute('id');
+        }
+    });
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href').includes(current)) {
+            link.classList.add('active');
+        }
+    });
 });
 
 // --- 5. LABO INTERACTIF ---
@@ -269,8 +285,16 @@ bubbleElements.forEach(b => {
     });
 });
 
+/* --- LOGIQUE INTERACTION BOUGIE / BEC BUNSEN (DESKTOP & MOBILE) --- */
 let isDragging = false;
 let offset = { x: 0, y: 0 };
+
+// Click/Tap directement sur le bec pour mobile
+bunsenTrigger.addEventListener('click', () => {
+    if(!isHeating && !isExploded) startHeating();
+});
+
+// Drag Desktop
 candle.addEventListener('mousedown', startDrag);
 candle.addEventListener('touchstart', startDrag, {passive: false});
 
@@ -295,8 +319,11 @@ function drag(e) {
     const clientX = e.clientX || e.touches[0].clientX;
     const clientY = e.clientY || e.touches[0].clientY;
     const labRect = document.getElementById('lab-bench').getBoundingClientRect();
+    
+    // Calcul relatif
     let newX = clientX - offset.x - labRect.left;
     let newY = clientY - offset.y - labRect.top;
+    
     candle.style.left = `${newX}px`;
     candle.style.top = `${newY}px`;
     candle.style.bottom = 'auto';
@@ -316,12 +343,12 @@ function stopDrag() {
 function checkIgnition() {
     const candleRect = candle.getBoundingClientRect();
     const triggerRect = bunsenTrigger.getBoundingClientRect();
+    // Simple collision detection
     if (candleRect.left < triggerRect.right && candleRect.right > triggerRect.left &&
         candleRect.top < triggerRect.bottom && candleRect.bottom > triggerRect.top) {
         startHeating();
-        candle.style.left = '250px';
-        candle.style.bottom = '50px';
-        candle.style.top = 'auto';
+        // Reset candle position visual
+        candle.style.display = 'none'; 
     }
 }
 
@@ -366,10 +393,12 @@ resetBtn.addEventListener('click', () => {
     erlenmeyer.classList.remove('broken');
     resetBtn.style.display = 'none';
     candle.style.display = 'block';
+    // Remettre la bougie à sa place initiale
+    candle.style.top = 'auto'; candle.style.bottom = '50px'; candle.style.left = '250px';
     initBubblePhysics();
 });
 
-// --- 6. MODALES CORE ---
+// --- 6. MODALES & BURGER ---
 const openBtns = document.querySelectorAll('.open-modal');
 const closeBtns = document.querySelectorAll('.modal-close');
 const overlays = document.querySelectorAll('.modal-overlay');
@@ -396,39 +425,34 @@ overlays.forEach(ov => ov.addEventListener('click', (e) => {
     }
 }));
 
-document.querySelector('.burger').addEventListener('click', () => {
-    document.querySelector('.nav-links').classList.toggle('nav-active');
-});
+// BURGER MENU LOGIC
+const burger = document.querySelector('.burger');
+const nav = document.querySelector('.nav-links');
+const navLinksItems = document.querySelectorAll('.nav-links li');
 
-// --- 8. SCROLL SPY (NAVIGATION ACTIVE) ---
-// Met à jour le soulignement du menu en fonction du scroll
-const sections = document.querySelectorAll('section');
-const navLinks = document.querySelectorAll('.nav-links a');
-
-window.addEventListener('scroll', () => {
-    let current = '';
-    
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        // On détecte la section quand on est au tiers de celle-ci
-        if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
-            current = section.getAttribute('id');
-        }
-    });
-
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        // Si le lien correspond à l'ID de la section actuelle, on l'active
-        if (link.getAttribute('href').includes(current)) {
-            link.classList.add('active');
+burger.addEventListener('click', () => {
+    nav.classList.toggle('nav-active');
+    burger.classList.toggle('toggle');
+    navLinksItems.forEach((link, index) => {
+        if (link.style.animation) {
+            link.style.animation = '';
+        } else {
+            link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
         }
     });
 });
 
+navLinksItems.forEach(item => {
+    item.addEventListener('click', () => {
+        nav.classList.remove('nav-active');
+        burger.classList.remove('toggle');
+        navLinksItems.forEach(link => link.style.animation = '');
+    });
+});
 
-// --- 7. GALLERY LOGIC & FILTERING ---
-
+// --- 7. GALLERY LOGIC (Avec tes 45 photos) ---
+// ... (COPIE-COLLE LE BLOC DE DONNÉES "galleryData" de l'étape précédente ICI) ...
+// Pour éviter un message trop long, je ne remets pas les 45 lignes, mais tu dois les garder !
 const galleryData = [
     // --- CATEGORIE: RANDO ---
     { src: "img/rando/IMG-20240613-WA0006.jpg", category: "rando", title: "Rando 01" },
@@ -519,32 +543,23 @@ const lightboxImg = document.getElementById('lightbox-img');
 const lightboxCaption = document.getElementById('lightbox-caption');
 const lightboxClose = document.querySelector('.lightbox-close');
 
-// --- FONCTION : Initialiser la grille ---
 function initGallery() {
     if(!gridContainer) return;
-    gridContainer.innerHTML = ''; // Nettoie la grille
-
+    gridContainer.innerHTML = '';
     galleryData.forEach(item => {
-        // 1. Création du conteneur de l'item
         const div = document.createElement('div');
         div.classList.add('gallery-item');
         div.setAttribute('data-category', item.category);
         
-        // 2. Gestion Image vs Vidéo pour la miniature
         let mediaElement;
         const isVideo = item.src.toLowerCase().endsWith('.mp4') || item.type === 'video';
 
         if (isVideo) {
-            // Si c'est une vidéo, on met une icône de lecture par dessus une div noire (ou une miniature si tu en as)
             div.classList.add('is-video');
-            // Création d'un placeholder vidéo
             mediaElement = document.createElement('video');
             mediaElement.src = item.src;
-            mediaElement.muted = true; // Pour éviter le son auto
+            mediaElement.muted = true;
             mediaElement.style.objectFit = "cover";
-            // LAZY LOADING (AMÉLIORATION 2) - Note: video n'a pas loading=lazy, on utilise preload=none si besoin
-            
-            // Ajout d'une icône play
             const playIcon = document.createElement('div');
             playIcon.innerHTML = '<i class="fas fa-play-circle"></i>';
             playIcon.style.position = 'absolute';
@@ -553,54 +568,41 @@ function initGallery() {
             playIcon.style.fontSize = '3rem'; playIcon.style.color = 'rgba(255,255,255,0.8)';
             playIcon.style.zIndex = '5';
             div.appendChild(playIcon);
-
         } else {
-            // C'est une image standard
             mediaElement = document.createElement('img');
             mediaElement.src = item.src;
             mediaElement.alt = item.title;
-            mediaElement.loading = "lazy"; // LAZY LOADING (AMÉLIORATION 2)
+            mediaElement.loading = "lazy";
         }
         
-        // 3. Overlay au survol
         const overlay = document.createElement('div');
         overlay.classList.add('gallery-overlay');
         overlay.innerHTML = `<div class="overlay-content"><h3>${item.title}</h3></div>`;
         
-        // Assemblage
         div.appendChild(mediaElement);
         div.appendChild(overlay);
         gridContainer.appendChild(div);
 
-        // 4. Click to Zoom (Lightbox)
         div.addEventListener('click', () => {
             lightbox.classList.add('active');
             lightboxCaption.textContent = item.title;
-            
-            // Nettoyage du contenu précédent de la lightbox
             const existingContent = lightbox.querySelector('img, video');
             if(existingContent) existingContent.remove();
 
             if (isVideo) {
-                // Créer un lecteur vidéo dans la lightbox
                 const vid = document.createElement('video');
                 vid.src = item.src;
                 vid.controls = true;
                 vid.autoplay = true;
                 vid.style.maxWidth = "90%";
                 vid.style.maxHeight = "80vh";
-                vid.style.borderRadius = "5px";
-                vid.style.border = "1px solid #333";
                 vid.id = "lightbox-media";
                 lightbox.insertBefore(vid, lightboxCaption);
             } else {
-                // Créer une image dans la lightbox
                 const img = document.createElement('img');
                 img.src = item.src;
                 img.style.maxWidth = "90%";
                 img.style.maxHeight = "80vh";
-                img.style.borderRadius = "5px";
-                img.style.boxShadow = "0 0 50px rgba(0,0,0,0.8)";
                 img.id = "lightbox-media";
                 lightbox.insertBefore(img, lightboxCaption);
             }
@@ -608,25 +610,16 @@ function initGallery() {
     });
 }
 
-// --- FONCTION : Filtrage ---
 filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-        // Gestion de la classe Active
         filterBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-
         const filter = btn.getAttribute('data-filter');
         const items = document.querySelectorAll('#full-gallery-grid .gallery-item');
-
         items.forEach(item => {
-            // Si "all" ou si la catégorie correspond -> afficher
             if(filter === 'all' || item.getAttribute('data-category') === filter) {
-                item.style.display = 'block'; // On utilise display block pour être sûr
-                // Petite animation d'apparition
-                item.animate([
-                    { transform: 'scale(0.8)', opacity: 0 },
-                    { transform: 'scale(1)', opacity: 1 }
-                ], { duration: 300, easing: 'ease-out' });
+                item.style.display = 'block';
+                item.animate([{ transform: 'scale(0.8)', opacity: 0 }, { transform: 'scale(1)', opacity: 1 }], { duration: 300, easing: 'ease-out' });
             } else {
                 item.style.display = 'none';
             }
@@ -634,20 +627,16 @@ filterBtns.forEach(btn => {
     });
 });
 
-// --- FONCTION : Fermeture Lightbox ---
 if(lightboxClose) {
     const closeLightbox = () => {
         lightbox.classList.remove('active');
-        // Stop vidéo si elle joue
         const vid = lightbox.querySelector('video');
         if(vid) vid.pause();
     };
-
     lightboxClose.addEventListener('click', closeLightbox);
     lightbox.addEventListener('click', (e) => {
         if(e.target === lightbox) closeLightbox();
     });
 }
 
-// Lancement au chargement de la page (après que le DOM soit prêt)
 window.addEventListener('DOMContentLoaded', initGallery);

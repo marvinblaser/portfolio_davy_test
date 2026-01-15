@@ -109,15 +109,15 @@ slider.addEventListener('mousemove', (e) => {
   const walk = (x - startX) * 2; slider.scrollLeft = scrollLeft - walk;
 });
 
-// --- 4. TIMELINE LOGIC ---
+// --- 4. SCROLL ANIMATIONS ---
 const scrollObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('visible');
         }
     });
-}, { threshold: 0.2 });
-document.querySelectorAll('.scroll-trigger').forEach(el => scrollObserver.observe(el));
+}, { threshold: 0.1 });
+document.querySelectorAll('.scroll-trigger, .fade-up').forEach(el => scrollObserver.observe(el));
 
 window.addEventListener('scroll', () => {
     const timeline = document.querySelector('.timeline');
@@ -319,6 +319,8 @@ function triggerImplosion() {
     isExploded = true;
     bunsenBurner.classList.remove('active');
     erlenmeyer.classList.remove('boiling');
+    erlenmeyer.classList.remove('imploding');
+    void erlenmeyer.offsetWidth;
     erlenmeyer.classList.add('imploding');
     heatTimerDisplay.classList.remove('visible');
     candle.style.display = 'none';
@@ -342,13 +344,13 @@ resetBtn.addEventListener('click', () => {
     initBubblePhysics();
 });
 
-// --- 6. MODALES & MENU (CORRECTED) ---
+// --- 6. MODALES CORE ---
 const openBtns = document.querySelectorAll('.open-modal');
 const closeBtns = document.querySelectorAll('.modal-close');
 const overlays = document.querySelectorAll('.modal-overlay');
 
 openBtns.forEach(btn => btn.addEventListener('click', (e) => {
-    e.preventDefault(); // Important pour les liens
+    e.preventDefault();
     const targetId = btn.getAttribute('data-target');
     const modal = document.getElementById(targetId);
     if(modal) {
@@ -372,3 +374,240 @@ overlays.forEach(ov => ov.addEventListener('click', (e) => {
 document.querySelector('.burger').addEventListener('click', () => {
     document.querySelector('.nav-links').classList.toggle('nav-active');
 });
+
+
+// --- 7. GALLERY LOGIC & FILTERING (V3 - Avec tes images) ---
+
+/* 
+   CONFIGURATION DES DONNÉES :
+   J'ai repris les noms exacts de tes captures.
+   Assure-toi que l'arborescence de tes dossiers est bien :
+   - img/
+     - rando/
+     - foot/
+     - chemistry/
+     - divers/
+*/
+
+const galleryData = [
+    // --- CATEGORIE: RANDO ---
+    { src: "img/rando/IMG-20240613-WA0006.jpg", category: "rando", title: "Rando 01" },
+    { src: "img/rando/IMG-20240613-WA0026.jpg", category: "rando", title: "Rando 02" },
+    { src: "img/rando/PXL_20240404_133717020.MP.jpg", category: "rando", title: "Nature" },
+    { src: "img/rando/PXL_20240509_115021536.jpg", category: "rando", title: "Paysage" },
+    { src: "img/rando/PXL_20240509_154649039.jpg", category: "rando", title: "Panorama" },
+    { src: "img/rando/PXL_20240510_115728184.MP.jpg", category: "rando", title: "Montagne" },
+    { src: "img/rando/PXL_20240610_151204175.MP.jpg", category: "rando", title: "Vue" },
+    { src: "img/rando/PXL_20240611_101228498.MP.jpg", category: "rando", title: "Sommet" },
+    { src: "img/rando/PXL_20240611_102142405.TS~2.mp4", category: "rando", title: "Vidéo Rando", type: "video" },
+    { src: "img/rando/PXL_20240612_125657899.jpg", category: "rando", title: "Sentier" },
+    { src: "img/rando/PXL_20250417_144541505.jpg", category: "rando", title: "Evasion" },
+    { src: "img/rando/PXL_20250417_145349337.jpg", category: "rando", title: "Forêt" },
+    { src: "img/rando/PXL_20250418_080731353.jpg", category: "rando", title: "Horizon" },
+
+    // --- CATEGORIE: FOOT ---
+    { src: "img/foot/_DSC0743.JPG", category: "football", title: "Action" },
+    { src: "img/foot/_DSC0787.JPG", category: "football", title: "Focus" },
+    { src: "img/foot/_DSC1058.JPG", category: "football", title: "Terrain" },
+    { src: "img/foot/_DSC1112.JPG", category: "football", title: "Jeu" },
+    { src: "img/foot/_DSC1123.JPG", category: "football", title: "Equipe" },
+    { src: "img/foot/_DSC1139.JPG", category: "football", title: "Momentum" },
+    { src: "img/foot/_DSC4017.JPG", category: "football", title: "Portrait" },
+    { src: "img/foot/_DSC4145.jpg", category: "football", title: "Détail" },
+    { src: "img/foot/_DSC4238.jpg", category: "football", title: "Intensity" },
+    { src: "img/foot/Snapchat-1369129726.jpg", category: "football", title: "Vestiaire" },
+    { src: "img/foot/Snapchat-1810924875.jpg", category: "football", title: "Victory" },
+    { src: "img/foot/Snapchat-2143698932.jpg", category: "football", title: "Squad" },
+
+    // --- CATEGORIE: CHIMIE ---
+    { src: "img/chemistry/PXL_20250207_103257388.MP.jpg", category: "chemistry", title: "Lab Bench" },
+    { src: "img/chemistry/PXL_20250311_105322430.MP.jpg", category: "chemistry", title: "Experiment" },
+    { src: "img/chemistry/PXL_20250204_112614333.TS (1).mp4", category: "chemistry", title: "Reaction Live", type: "video" },
+
+    // --- CATEGORIE: DIVERS (Liste Complète - 45 fichiers) ---
+    { src: "img/divers/IMG-20241104-WA0056.jpg", category: "divers", title: "Divers 01" },
+    { src: "img/divers/PXL_20240404_143449854.MP.jpg", category: "divers", title: "Divers 02" },
+    { src: "img/divers/PXL_20240430_115150490.MP.jpg", category: "divers", title: "Divers 03" },
+    { src: "img/divers/PXL_20240430_141022123.jpg", category: "divers", title: "Divers 04" },
+    { src: "img/divers/PXL_20240430_152853454.MP.jpg", category: "divers", title: "Divers 05" },
+    { src: "img/divers/PXL_20240501_110535232.MP~2.jpg", category: "divers", title: "Divers 06" },
+    { src: "img/divers/PXL_20240501_141048283.MP.jpg", category: "divers", title: "Divers 07" },
+    { src: "img/divers/PXL_20240501_161931526.MP.jpg", category: "divers", title: "Divers 08" },
+    { src: "img/divers/PXL_20240502_103342142.MP.jpg", category: "divers", title: "Divers 09" },
+    { src: "img/divers/PXL_20240502_122422088.jpg", category: "divers", title: "Divers 10" },
+    { src: "img/divers/PXL_20240503_072452746.MP.jpg", category: "divers", title: "Divers 11" },
+    { src: "img/divers/PXL_20240610_145115800.jpg", category: "divers", title: "Divers 12" },
+    { src: "img/divers/PXL_20241028_171733890.MP.jpg", category: "divers", title: "Divers 13" },
+    { src: "img/divers/PXL_20241029_144935063.MP.jpg", category: "divers", title: "Divers 14" },
+    { src: "img/divers/PXL_20241029_155820667.MP.jpg", category: "divers", title: "Divers 15" },
+    { src: "img/divers/PXL_20241029_161336828.MP.jpg", category: "divers", title: "Divers 16" },
+    { src: "img/divers/PXL_20241030_120609962.MP.jpg", category: "divers", title: "Divers 17" },
+    { src: "img/divers/PXL_20241030_125011597.MP.jpg", category: "divers", title: "Divers 18" },
+    { src: "img/divers/PXL_20250222_121716921.jpg", category: "divers", title: "Divers 19" },
+    { src: "img/divers/PXL_20250222_182327467.MP.jpg", category: "divers", title: "Divers 20" },
+    { src: "img/divers/PXL_20251207_111614361.jpg", category: "divers", title: "Divers 21" },
+    { src: "img/divers/PXL_20251207_124624140.jpg", category: "divers", title: "Divers 22" },
+    { src: "img/divers/PXL_20251207_125027441.jpg", category: "divers", title: "Divers 23" },
+    { src: "img/divers/PXL_20251207_150549051.jpg", category: "divers", title: "Divers 24" },
+    { src: "img/divers/PXL_20251208_103809877.MP.jpg", category: "divers", title: "Divers 25" },
+    { src: "img/divers/PXL_20251208_115309536.MP.jpg", category: "divers", title: "Divers 26" },
+    { src: "img/divers/PXL_20251208_124930571.jpg", category: "divers", title: "Divers 27" },
+    { src: "img/divers/PXL_20251208_125539137.jpg", category: "divers", title: "Divers 28" },
+    { src: "img/divers/PXL_20251210_103910668.MP~2.jpg", category: "divers", title: "Divers 29" },
+    { src: "img/divers/PXL_20251210_124353964.jpg", category: "divers", title: "Divers 30" },
+    { src: "img/divers/PXL_20251210_151035439.jpg", category: "divers", title: "Divers 31" },
+    { src: "img/divers/PXL_20251211_102510652.MP.jpg", category: "divers", title: "Divers 32" },
+    { src: "img/divers/PXL_20251211_103717038.jpg", category: "divers", title: "Divers 33" },
+    { src: "img/divers/PXL_20251211_132621768.jpg", category: "divers", title: "Divers 34" },
+    { src: "img/divers/PXL_20251212_114004787.jpg", category: "divers", title: "Divers 35" },
+    { src: "img/divers/PXL_20251212_115545105.jpg", category: "divers", title: "Divers 36" },
+    { src: "img/divers/PXL_20251212_115847409.jpg", category: "divers", title: "Divers 37" },
+    { src: "img/divers/PXL_20251212_122215181.jpg", category: "divers", title: "Divers 38" },
+    { src: "img/divers/PXL_20251212_143828838.jpg", category: "divers", title: "Divers 39" },
+    { src: "img/divers/PXL_20251212_145230634.jpg", category: "divers", title: "Divers 40" },
+    { src: "img/divers/PXL_20251212_145826858.jpg", category: "divers", title: "Divers 41" },
+    { src: "img/divers/PXL_20251212_154027793.jpg", category: "divers", title: "Divers 42" },
+    { src: "img/divers/PXL_20251212_154906082.MP.jpg", category: "divers", title: "Divers 43" },
+    { src: "img/divers/PXL_20251213_125847602.jpg", category: "divers", title: "Divers 44" },
+    { src: "img/divers/Snapchat-1382514375.jpg", category: "divers", title: "Divers 45" }
+];
+
+// Sélection des éléments du DOM
+const gridContainer = document.getElementById('full-gallery-grid');
+const filterBtns = document.querySelectorAll('.cat-item');
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
+const lightboxCaption = document.getElementById('lightbox-caption');
+const lightboxClose = document.querySelector('.lightbox-close');
+
+// --- FONCTION : Initialiser la grille ---
+function initGallery() {
+    if(!gridContainer) return;
+    gridContainer.innerHTML = ''; // Nettoie la grille
+
+    galleryData.forEach(item => {
+        // 1. Création du conteneur de l'item
+        const div = document.createElement('div');
+        div.classList.add('gallery-item');
+        div.setAttribute('data-category', item.category);
+        
+        // 2. Gestion Image vs Vidéo pour la miniature
+        let mediaElement;
+        const isVideo = item.src.toLowerCase().endsWith('.mp4') || item.type === 'video';
+
+        if (isVideo) {
+            // Si c'est une vidéo, on met une icône de lecture par dessus une div noire (ou une miniature si tu en as)
+            div.classList.add('is-video');
+            // Création d'un placeholder vidéo
+            mediaElement = document.createElement('video');
+            mediaElement.src = item.src;
+            mediaElement.muted = true; // Pour éviter le son auto
+            mediaElement.style.objectFit = "cover";
+            
+            // Ajout d'une icône play
+            const playIcon = document.createElement('div');
+            playIcon.innerHTML = '<i class="fas fa-play-circle"></i>';
+            playIcon.style.position = 'absolute';
+            playIcon.style.top = '50%'; playIcon.style.left = '50%';
+            playIcon.style.transform = 'translate(-50%, -50%)';
+            playIcon.style.fontSize = '3rem'; playIcon.style.color = 'rgba(255,255,255,0.8)';
+            playIcon.style.zIndex = '5';
+            div.appendChild(playIcon);
+
+        } else {
+            // C'est une image standard
+            mediaElement = document.createElement('img');
+            mediaElement.src = item.src;
+            mediaElement.alt = item.title;
+            mediaElement.loading = "lazy"; // Performance
+        }
+        
+        // 3. Overlay au survol
+        const overlay = document.createElement('div');
+        overlay.classList.add('gallery-overlay');
+        overlay.innerHTML = `<div class="overlay-content"><h3>${item.title}</h3></div>`;
+        
+        // Assemblage
+        div.appendChild(mediaElement);
+        div.appendChild(overlay);
+        gridContainer.appendChild(div);
+
+        // 4. Click to Zoom (Lightbox)
+        div.addEventListener('click', () => {
+            lightbox.classList.add('active');
+            lightboxCaption.textContent = item.title;
+            
+            // Nettoyage du contenu précédent de la lightbox
+            const existingContent = lightbox.querySelector('img, video');
+            if(existingContent) existingContent.remove();
+
+            if (isVideo) {
+                // Créer un lecteur vidéo dans la lightbox
+                const vid = document.createElement('video');
+                vid.src = item.src;
+                vid.controls = true;
+                vid.autoplay = true;
+                vid.style.maxWidth = "90%";
+                vid.style.maxHeight = "80vh";
+                vid.style.borderRadius = "5px";
+                vid.style.border = "1px solid #333";
+                vid.id = "lightbox-media";
+                lightbox.insertBefore(vid, lightboxCaption);
+            } else {
+                // Créer une image dans la lightbox
+                const img = document.createElement('img');
+                img.src = item.src;
+                img.style.maxWidth = "90%";
+                img.style.maxHeight = "80vh";
+                img.style.borderRadius = "5px";
+                img.style.boxShadow = "0 0 50px rgba(0,0,0,0.8)";
+                img.id = "lightbox-media";
+                lightbox.insertBefore(img, lightboxCaption);
+            }
+        });
+    });
+}
+
+// --- FONCTION : Filtrage ---
+filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        // Gestion de la classe Active
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filter = btn.getAttribute('data-filter');
+        const items = document.querySelectorAll('#full-gallery-grid .gallery-item');
+
+        items.forEach(item => {
+            // Si "all" ou si la catégorie correspond -> afficher
+            if(filter === 'all' || item.getAttribute('data-category') === filter) {
+                item.style.display = 'block'; // On utilise display block pour être sûr
+                // Petite animation d'apparition
+                item.animate([
+                    { transform: 'scale(0.8)', opacity: 0 },
+                    { transform: 'scale(1)', opacity: 1 }
+                ], { duration: 300, easing: 'ease-out' });
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+});
+
+// --- FONCTION : Fermeture Lightbox ---
+if(lightboxClose) {
+    const closeLightbox = () => {
+        lightbox.classList.remove('active');
+        // Stop vidéo si elle joue
+        const vid = lightbox.querySelector('video');
+        if(vid) vid.pause();
+    };
+
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => {
+        if(e.target === lightbox) closeLightbox();
+    });
+}
+
+// Lancement au chargement de la page
+window.addEventListener('DOMContentLoaded', initGallery);

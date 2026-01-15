@@ -10,6 +10,19 @@
 </head>
 <body>
 
+    <!-- ==================== PRELOADER (AMÉLIORATION 1) ==================== -->
+    <div id="preloader">
+        <div class="loader-content">
+            <div class="loader-flask">
+                <div class="loader-liquid"></div>
+                <div class="loader-bubbles">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+            <p class="loader-text">Initialisation des réactifs...</p>
+        </div>
+    </div>
+
     <!-- ==================== BACKGROUND & NAV ==================== -->
     <canvas id="molecular-canvas"></canvas>
     <div id="flash-overlay"></div>
@@ -331,7 +344,7 @@
 
     <!-- ==================== MODALS ==================== -->
     
-    <!-- 1. Full Gallery Modal (NOUVEAU) -->
+    <!-- 1. Full Gallery Modal -->
     <div id="modal-full-gallery" class="modal-overlay">
         <div class="modal-wrapper gallery-wrapper">
             <button class="modal-close">&times;</button>
@@ -357,17 +370,14 @@
         </div>
     </div>
 
-    <!-- 2. Lightbox pour le zoom (NOUVEAU) -->
+    <!-- 2. Lightbox pour le zoom -->
     <div id="lightbox" class="lightbox-overlay">
         <button class="lightbox-close">&times;</button>
         <img id="lightbox-img" src="" alt="Zoom">
         <div id="lightbox-caption"></div>
     </div>
 
-    <!-- 3. Existing Project Modals (Modals A, B, C, D) & Skill Modal -->
-    <!-- (J'ai abrégé ici, garde tes modales existantes A, B, C, D et Skill exactement comme avant) -->
-    
-    <!-- Modal SKILL -->
+    <!-- 3. Modal SKILL -->
     <div id="modal-skill" class="modal-overlay">
         <div class="modal-wrapper" style="max-width: 600px;">
             <button class="modal-close">&times;</button>
@@ -385,28 +395,202 @@
         </div>
     </div>
 
-    <!-- Project Modal A (Exemple, garde les autres) -->
+    <!-- 4. PROJECT MODALS (FICTIFS COMPLETS) -->
+
+    <!-- PROJET A : CHIMIE ORGANIQUE -->
     <div id="modal-A" class="modal-overlay">
         <div class="modal-wrapper">
             <button class="modal-close">&times;</button>
             <div class="modal-hero" style="background-image: url('https://images.unsplash.com/photo-1614726365723-49cfa2728637?q=80&w=1200&auto=format&fit=crop');">
                 <div class="hero-overlay"></div>
-                <div class="hero-text"><span class="modal-tag red">Chimie Organique</span><h2>Synthèse Continue</h2></div>
+                <div class="hero-text">
+                    <span class="modal-tag red">Chimie Organique</span>
+                    <h2>Synthèse en Flux Continu</h2>
+                </div>
             </div>
             <div class="modal-scroll-content">
                 <div class="modal-grid">
-                    <div class="modal-main"><div class="content-block"><h3>Contexte</h3><p>Optimisation.</p></div></div>
-                    <div class="modal-sidebar"><div class="tech-box"><h4>Outils</h4><div class="tag-cloud"><span>RMN</span></div></div></div>
+                    <div class="modal-main">
+                        <div class="content-block">
+                            <h3><i class="fas fa-flag-checkered"></i> Objectif</h3>
+                            <p>Transposer une réaction de couplage de Suzuki-Miyaura, classiquement réalisée en "batch" (réacteur fermé), vers un système en flux continu (Flow Chemistry) pour améliorer le rendement et la sécurité.</p>
+                        </div>
+                        <div class="content-block">
+                            <h3><i class="fas fa-cogs"></i> Méthodologie</h3>
+                            <ul style="color: #ccc; margin-left: 20px; line-height: 1.6;">
+                                <li>Design du réacteur tubulaire imprimé en 3D (PLA résistant aux solvants).</li>
+                                <li>Optimisation des paramètres : Temps de séjour, Température (120°C), Pression (5 bar).</li>
+                                <li>Catalyseur : Palladium sur charbon (Pd/C) en lit fixe.</li>
+                            </ul>
+                        </div>
+                        <div class="content-block">
+                            <h3><i class="fas fa-chart-line"></i> Résultats</h3>
+                            <p>Le passage en continu a permis de réduire le temps de réaction de <strong>4h à 15 minutes</strong> tout en augmentant le rendement isolé de <strong>65% à 92%</strong>. La pureté du produit brut a éliminé une étape de chromatographie.</p>
+                        </div>
+                        <div class="project-gallery">
+                            <img src="https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=600" alt="Réacteur">
+                            <img src="https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=600" alt="Analyse RMN">
+                        </div>
+                    </div>
+                    <div class="modal-sidebar">
+                        <div class="tech-box">
+                            <h4>Compétences Clés</h4>
+                            <div class="tag-cloud">
+                                <span>Flow Chemistry</span>
+                                <span>RMN 400MHz</span>
+                                <span>HPLC</span>
+                                <span>Génie des procédés</span>
+                            </div>
+                        </div>
+                        <div class="tech-box">
+                            <h4>Date & Lieu</h4>
+                            <p>Avril 2025 - Université de Strasbourg</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROJET B : POLYMERES -->
+    <div id="modal-B" class="modal-overlay">
+        <div class="modal-wrapper">
+            <button class="modal-close">&times;</button>
+            <div class="modal-hero" style="background-image: url('https://images.unsplash.com/photo-1506152983158-b4a74a01c721?q=80&w=1200&auto=format&fit=crop');">
+                <div class="hero-overlay"></div>
+                <div class="hero-text">
+                    <span class="modal-tag blue">Polymères & Santé</span>
+                    <h2>Micro-Encapsulation</h2>
+                </div>
+            </div>
+            <div class="modal-scroll-content">
+                <div class="modal-grid">
+                    <div class="modal-main">
+                        <div class="content-block">
+                            <h3><i class="fas fa-capsules"></i> Le Défi</h3>
+                            <p>Développer un système de délivrance de médicament (Drug Delivery) capable de protéger une molécule active (Curcumine) de l'acidité gastrique et de la libérer dans l'intestin.</p>
+                        </div>
+                        <div class="content-block">
+                            <h3><i class="fas fa-flask"></i> Approche</h3>
+                            <p>Utilisation de la technique de <strong>Gélification Ionique</strong>. Formation de billes d'hydrogel par goutte-à-goutte d'une solution d'Alginate de Sodium dans un bain de Chlorure de Calcium (CaCl2).</p>
+                        </div>
+                        <div class="content-block">
+                            <h3><i class="fas fa-microscope"></i> Observations</h3>
+                            <p>Les tests de dissolution in-vitro ont montré une résistance totale à pH 1.2 (estomac) pendant 2h, suivie d'une libération progressive de 80% du principe actif à pH 7.4 (intestin) sur 6h.</p>
+                        </div>
+                    </div>
+                    <div class="modal-sidebar">
+                        <div class="tech-box">
+                            <h4>Techniques</h4>
+                            <div class="tag-cloud">
+                                <span>Alginate/Chitosane</span>
+                                <span>Spectro UV-Vis</span>
+                                <span>Rhéologie</span>
+                                <span>pH-métrie</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROJET C : MATERIAUX -->
+    <div id="modal-C" class="modal-overlay">
+        <div class="modal-wrapper">
+            <button class="modal-close">&times;</button>
+            <div class="modal-hero" style="background-image: url('https://images.unsplash.com/photo-1516981879613-9f5da904015f?q=80&w=1200&auto=format&fit=crop');">
+                <div class="hero-overlay"></div>
+                <div class="hero-text">
+                    <span class="modal-tag orange">Matériaux Solides</span>
+                    <h2>Céramiques Avancées</h2>
+                </div>
+            </div>
+            <div class="modal-scroll-content">
+                <div class="modal-grid">
+                    <div class="modal-main">
+                        <div class="content-block">
+                            <h3><i class="fas fa-fire"></i> Synthèse Haute Température</h3>
+                            <p>Élaboration d'une céramique piézoélectrique (Titanate de Baryum - BaTiO3) par voie solide (Solid State Synthesis) pour des applications de capteurs.</p>
+                        </div>
+                        <div class="content-block">
+                            <h3><i class="fas fa-layer-group"></i> Protocole</h3>
+                            <ol style="color: #ccc; margin-left: 20px; line-height: 1.6;">
+                                <li>Broyage planétaire des poudres BaCO3 et TiO2 (24h).</li>
+                                <li>Calcination à 1100°C pour former la phase.</li>
+                                <li>Pressage isostatique des pastilles.</li>
+                                <li>Frittage (Sintering) final à <strong>1450°C</strong>.</li>
+                            </ol>
+                        </div>
+                        <div class="content-block">
+                            <h3><i class="fas fa-check-circle"></i> Caractérisation</h3>
+                            <p>L'analyse par Diffraction des Rayons X (DRX) a confirmé une structure pure de type Pérovskite quadratique. Densité relative atteinte : 96% théorique.</p>
+                        </div>
+                    </div>
+                    <div class="modal-sidebar">
+                        <div class="tech-box">
+                            <h4>Instrumentation</h4>
+                            <div class="tag-cloud">
+                                <span>Four 1600°C</span>
+                                <span>DRX (Diffraction)</span>
+                                <span>MEB (Microscopie)</span>
+                                <span>Dilatométrie</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROJET D : IT / HARDWARE -->
+    <div id="modal-D" class="modal-overlay">
+        <div class="modal-wrapper">
+            <button class="modal-close">&times;</button>
+            <div class="modal-hero" style="background-image: url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1200&auto=format&fit=crop');">
+                <div class="hero-overlay"></div>
+                <div class="hero-text">
+                    <span class="modal-tag green">Ingénierie Système</span>
+                    <h2>Infrastructure HomeLab</h2>
+                </div>
+            </div>
+            <div class="modal-scroll-content">
+                <div class="modal-grid">
+                    <div class="modal-main">
+                        <div class="content-block">
+                            <h3><i class="fas fa-server"></i> Le Besoin</h3>
+                            <p>Création d'une infrastructure de stockage centralisée, sécurisée et accessible à distance, indépendante des solutions Cloud GAFAM (Google/Apple).</p>
+                        </div>
+                        <div class="content-block">
+                            <h3><i class="fas fa-microchip"></i> Hardware Custom</h3>
+                            <p>Assemblage d'un serveur basse consommation :</p>
+                            <ul style="color: #ccc; margin-left: 20px;">
+                                <li>CPU : Intel i5 (Low TDP)</li>
+                                <li>RAM : 32Go DDR4 ECC</li>
+                                <li>Stockage : 4x 4To en RAID Z1 (ZFS) + Cache NVMe.</li>
+                            </ul>
+                        </div>
+                        <div class="content-block">
+                            <h3><i class="fas fa-terminal"></i> Software Stack</h3>
+                            <p>Virtualisation sous <strong>Proxmox VE</strong>. Déploiement de conteneurs Docker pour : Nextcloud (Fichiers), Plex (Média), Pi-Hole (Filtrage DNS réseau) et WireGuard (VPN).</p>
+                        </div>
+                    </div>
+                    <div class="modal-sidebar">
+                        <div class="tech-box">
+                            <h4>Stack Technique</h4>
+                            <div class="tag-cloud">
+                                <span>Linux Debian</span>
+                                <span>Docker / Portainer</span>
+                                <span>ZFS File System</span>
+                                <span>Réseau / DNS</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- (Ajoute ici modal-B, modal-C, modal-D comme dans ta version précédente) -->
-    <div id="modal-B" class="modal-overlay"><div class="modal-wrapper"><button class="modal-close">&times;</button><div class="modal-scroll-content"><h2>Contenu Projet B</h2></div></div></div>
-    <div id="modal-C" class="modal-overlay"><div class="modal-wrapper"><button class="modal-close">&times;</button><div class="modal-scroll-content"><h2>Contenu Projet C</h2></div></div></div>
-    <div id="modal-D" class="modal-overlay"><div class="modal-wrapper"><button class="modal-close">&times;</button><div class="modal-scroll-content"><h2>Contenu Projet D</h2></div></div></div>
-
     <script src="script.js"></script>
 </body>
 </html>

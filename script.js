@@ -1,3 +1,29 @@
+// --- 0. PRELOADER (AMÉLIORATION 1) ---
+window.addEventListener('load', () => {
+    const preloader = document.getElementById('preloader');
+    if(preloader) {
+        setTimeout(() => {
+            preloader.classList.add('loaded');
+            typeEffect(); // Lancer l'animation du texte après
+        }, 800);
+    }
+});
+
+// --- EASTER EGG (AMÉLIORATION 5) ---
+const secretCode = ['h', '2', 'o'];
+let secretIndex = 0;
+document.addEventListener('keydown', (e) => {
+    if (e.key.toLowerCase() === secretCode[secretIndex]) {
+        secretIndex++;
+        if (secretIndex === secretCode.length) {
+            document.body.classList.toggle('acid-mode');
+            secretIndex = 0;
+        }
+    } else {
+        secretIndex = 0;
+    }
+});
+
 // --- 1. CANVAS (PARTICLES & COMETS) ---
 const canvas = document.getElementById('molecular-canvas');
 const ctx = canvas.getContext('2d');
@@ -89,7 +115,6 @@ function typeEffect() {
     else if (isDeleting && charIndex === 0) { isDeleting = false; phraseIndex = (phraseIndex + 1) % phrases.length; speed = 500; }
     setTimeout(typeEffect, speed);
 }
-document.addEventListener('DOMContentLoaded', typeEffect);
 
 // --- 3. CAROUSEL DRAG ---
 const slider = document.querySelector('.carousel-container');
@@ -375,19 +400,34 @@ document.querySelector('.burger').addEventListener('click', () => {
     document.querySelector('.nav-links').classList.toggle('nav-active');
 });
 
+// --- 8. SCROLL SPY (NAVIGATION ACTIVE) ---
+// Met à jour le soulignement du menu en fonction du scroll
+const sections = document.querySelectorAll('section');
+const navLinks = document.querySelectorAll('.nav-links a');
 
-// --- 7. GALLERY LOGIC & FILTERING (V3 - Avec tes images) ---
+window.addEventListener('scroll', () => {
+    let current = '';
+    
+    sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        // On détecte la section quand on est au tiers de celle-ci
+        if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+            current = section.getAttribute('id');
+        }
+    });
 
-/* 
-   CONFIGURATION DES DONNÉES :
-   J'ai repris les noms exacts de tes captures.
-   Assure-toi que l'arborescence de tes dossiers est bien :
-   - img/
-     - rando/
-     - foot/
-     - chemistry/
-     - divers/
-*/
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        // Si le lien correspond à l'ID de la section actuelle, on l'active
+        if (link.getAttribute('href').includes(current)) {
+            link.classList.add('active');
+        }
+    });
+});
+
+
+// --- 7. GALLERY LOGIC & FILTERING ---
 
 const galleryData = [
     // --- CATEGORIE: RANDO ---
@@ -424,7 +464,7 @@ const galleryData = [
     { src: "img/chemistry/PXL_20250311_105322430.MP.jpg", category: "chemistry", title: "Experiment" },
     { src: "img/chemistry/PXL_20250204_112614333.TS (1).mp4", category: "chemistry", title: "Reaction Live", type: "video" },
 
-    // --- CATEGORIE: DIVERS (Liste Complète - 45 fichiers) ---
+    // --- CATEGORIE: DIVERS ---
     { src: "img/divers/IMG-20241104-WA0056.jpg", category: "divers", title: "Divers 01" },
     { src: "img/divers/PXL_20240404_143449854.MP.jpg", category: "divers", title: "Divers 02" },
     { src: "img/divers/PXL_20240430_115150490.MP.jpg", category: "divers", title: "Divers 03" },
@@ -472,7 +512,6 @@ const galleryData = [
     { src: "img/divers/Snapchat-1382514375.jpg", category: "divers", title: "Divers 45" }
 ];
 
-// Sélection des éléments du DOM
 const gridContainer = document.getElementById('full-gallery-grid');
 const filterBtns = document.querySelectorAll('.cat-item');
 const lightbox = document.getElementById('lightbox');
@@ -503,6 +542,7 @@ function initGallery() {
             mediaElement.src = item.src;
             mediaElement.muted = true; // Pour éviter le son auto
             mediaElement.style.objectFit = "cover";
+            // LAZY LOADING (AMÉLIORATION 2) - Note: video n'a pas loading=lazy, on utilise preload=none si besoin
             
             // Ajout d'une icône play
             const playIcon = document.createElement('div');
@@ -519,7 +559,7 @@ function initGallery() {
             mediaElement = document.createElement('img');
             mediaElement.src = item.src;
             mediaElement.alt = item.title;
-            mediaElement.loading = "lazy"; // Performance
+            mediaElement.loading = "lazy"; // LAZY LOADING (AMÉLIORATION 2)
         }
         
         // 3. Overlay au survol
@@ -609,5 +649,5 @@ if(lightboxClose) {
     });
 }
 
-// Lancement au chargement de la page
+// Lancement au chargement de la page (après que le DOM soit prêt)
 window.addEventListener('DOMContentLoaded', initGallery);

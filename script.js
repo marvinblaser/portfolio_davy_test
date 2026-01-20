@@ -24,7 +24,7 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// --- 1. CANVAS ---
+// --- 1. CANVAS BACKGROUND ---
 const canvas = document.getElementById('molecular-canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
@@ -102,7 +102,7 @@ function animate() {
 }
 initParticles(); animate();
 
-// --- 2. TYPEWRITER ---
+// --- 2. TYPEWRITER (ENGLISH) ---
 const textElement = document.getElementById('typing-text');
 const phrases = ["Architecting Matter.", "Synthesizing Solutions.", "Engineering Digital Systems.", "Davy Blaser: M1 Molecular Chemistry"];
 let phraseIndex = 0, charIndex = 0, isDeleting = false;
@@ -116,41 +116,26 @@ function typeEffect() {
     setTimeout(typeEffect, speed);
 }
 
-// --- 3. CAROUSEL (DRAG & ARROWS) ---
+// --- 3. CAROUSEL ---
 const slider = document.querySelector('.carousel-container');
 const prevBtn = document.getElementById('proj-prev');
 const nextBtn = document.getElementById('proj-next');
 
 // Drag Logic
-let isDown = false;
-let startX;
-let scrollLeft;
-
-slider.addEventListener('mousedown', (e) => {
-  isDown = true; slider.classList.add('active');
-  startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft;
-});
+let isDown = false; let startX; let scrollLeft;
+slider.addEventListener('mousedown', (e) => { isDown = true; slider.classList.add('active'); startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft; });
 slider.addEventListener('mouseleave', () => { isDown = false; slider.classList.remove('active'); });
 slider.addEventListener('mouseup', () => { isDown = false; slider.classList.remove('active'); });
-slider.addEventListener('mousemove', (e) => {
-  if(!isDown) return;
-  e.preventDefault();
-  const x = e.pageX - slider.offsetLeft;
-  const walk = (x - startX) * 2; slider.scrollLeft = scrollLeft - walk;
-});
+slider.addEventListener('mousemove', (e) => { if(!isDown) return; e.preventDefault(); const x = e.pageX - slider.offsetLeft; const walk = (x - startX) * 2; slider.scrollLeft = scrollLeft - walk; });
 
-// Arrow Logic (AMÉLIORATION 1)
+// Arrow Logic
 if(prevBtn && nextBtn && slider) {
-    const scrollAmount = 350; // Largeur carte + gap approximatif
-    prevBtn.addEventListener('click', () => {
-        slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-    });
-    nextBtn.addEventListener('click', () => {
-        slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    });
+    const scrollAmount = 350;
+    prevBtn.addEventListener('click', () => { slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); });
+    nextBtn.addEventListener('click', () => { slider.scrollBy({ left: scrollAmount, behavior: 'smooth' }); });
 }
 
-// --- 4. SCROLL ANIMATIONS & SPY ---
+// --- 4. SCROLL SPY ---
 const scrollObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
 }, { threshold: 0.1 });
@@ -160,76 +145,61 @@ const sections = document.querySelectorAll('section');
 const navLinks = document.querySelectorAll('.nav-links a');
 
 window.addEventListener('scroll', () => {
-    // Timeline Scroll Line
     const timeline = document.querySelector('.timeline');
     const scrollLine = document.querySelector('.timeline-scroll-line');
     if(timeline && scrollLine) {
         const rect = timeline.getBoundingClientRect();
-        const start = window.innerHeight * 0.8; 
-        const end = window.innerHeight * 0.2;
+        const start = window.innerHeight * 0.8; const end = window.innerHeight * 0.2;
         let percentage = (start - rect.top) / (rect.height + start - end);
         percentage = Math.max(0, Math.min(1, percentage));
         scrollLine.style.height = `${percentage * 100}%`;
     }
-
-    // Scroll Spy
     let current = '';
     sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
-            current = section.getAttribute('id');
-        }
+        const sectionTop = section.offsetTop; const sectionHeight = section.clientHeight;
+        if (pageYOffset >= (sectionTop - sectionHeight / 3)) { current = section.getAttribute('id'); }
     });
     navLinks.forEach(link => {
         link.classList.remove('active');
-        if (link.getAttribute('href').includes(current)) {
-            link.classList.add('active');
-        }
+        if (link.getAttribute('href').includes(current)) { link.classList.add('active'); }
     });
 });
 
-// --- 5. DATA COMPETENCES (Avec Couleurs Uniques) ---
+// --- 5. SKILL DATA (ENGLISH) ---
 const skillData = {
     "synthesis": {
         title: "Organic Synthesis",
-        desc: "Architecture moléculaire & Synthèse complexe.",
-        targetModal: "modal-A",
-        color: 0xff4b2b // Orange (Chimie)
+        desc: "Architecture & Complex Synthesis.",
+        targetModal: "modal-A", color: 0xff4b2b
     },
     "polymers": {
         title: "Polymers",
-        desc: "Matériaux souples & Encapsulation.",
-        targetModal: "modal-B",
-        color: 0x4b89ff // Bleu (Polymères)
+        desc: "Soft Materials & Encapsulation.",
+        targetModal: "modal-B", color: 0x4b89ff
     },
      "analysis": {
         title: "Analytical Chem",
-        desc: "Spectroscopie & Identification.",
-        targetModal: "modal-C",
-        color: 0xa855f7 // Violet (Précision)
+        desc: "Spectroscopy & Identification.",
+        targetModal: "modal-C", color: 0xa855f7
     },
     "hardware": {
         title: "Hardware & IT",
-        desc: "Architecture Serveur & Optimisation.",
-        targetModal: "modal-D",
-        color: 0x00e676 // Vert Matrix (Tech)
+        desc: "Server Architecture & Optimization.",
+        targetModal: "modal-D", color: 0x00e676
     },
     "sustainability": {
         title: "Green Chemistry",
-        desc: "Valorisation CO2 & Cycles durables.",
-        targetModal: "modal-E",
-        color: 0x00d2d3 // Turquoise (Écologie)
+        desc: "CO2 Valorization & Sustainable Cycles.",
+        targetModal: "modal-E", color: 0x00d2d3
     },
      "modeling": {
         title: "Modeling",
-        desc: "Simulation in-silico & Docking.",
-        targetModal: "modal-F",
-        color: 0xff9f43 // Jaune (Calcul)
+        desc: "In-silico Simulation & Docking.",
+        targetModal: "modal-F", color: 0xff9f43
     }
 };
 
-// --- 6. MODALES & BURGER ---
+// --- 6. MODALS & BURGER ---
 const openBtns = document.querySelectorAll('.open-modal');
 const closeBtns = document.querySelectorAll('.modal-close');
 const overlays = document.querySelectorAll('.modal-overlay');
@@ -238,10 +208,7 @@ openBtns.forEach(btn => btn.addEventListener('click', (e) => {
     e.preventDefault();
     const targetId = btn.getAttribute('data-target');
     const modal = document.getElementById(targetId);
-    if(modal) {
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
+    if(modal) { modal.classList.add('active'); document.body.style.overflow = 'hidden'; }
 }));
 
 closeBtns.forEach(btn => btn.addEventListener('click', () => {
@@ -250,136 +217,124 @@ closeBtns.forEach(btn => btn.addEventListener('click', () => {
 }));
 
 overlays.forEach(ov => ov.addEventListener('click', (e) => {
-    if(e.target === ov) {
-        ov.classList.remove('active');
-        document.body.style.overflow = 'auto';
-    }
+    if(e.target === ov) { ov.classList.remove('active'); document.body.style.overflow = 'auto'; }
 }));
 
 const burger = document.querySelector('.burger');
 const nav = document.querySelector('.nav-links');
 const navLinksItems = document.querySelectorAll('.nav-links li');
-
 if(burger) {
     burger.addEventListener('click', () => {
-        nav.classList.toggle('nav-active');
-        burger.classList.toggle('toggle');
+        nav.classList.toggle('nav-active'); burger.classList.toggle('toggle');
         navLinksItems.forEach((link, index) => {
-            if (link.style.animation) {
-                link.style.animation = '';
-            } else {
-                link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
-            }
+            if (link.style.animation) link.style.animation = '';
+            else link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
         });
     });
 }
-
 navLinksItems.forEach(item => {
     item.addEventListener('click', () => {
-        nav.classList.remove('nav-active');
-        burger.classList.remove('toggle');
+        nav.classList.remove('nav-active'); burger.classList.remove('toggle');
         navLinksItems.forEach(link => link.style.animation = '');
     });
 });
 
-// --- 7. MINI CAROUSEL (Life Samples) ---
+// --- 7. MINI CAROUSEL ---
 function initMiniCarousel() {
     const container = document.getElementById('mini-carousel-container');
     if(!container) return;
     const images = container.querySelectorAll('.carousel-img');
     let currentIndex = 0;
-
     setInterval(() => {
         images[currentIndex].classList.remove('active');
         currentIndex = (currentIndex + 1) % images.length;
         images[currentIndex].classList.add('active');
-    }, 3000); // Change every 3 seconds
+    }, 3000);
 }
 initMiniCarousel();
 
-
-// --- 8. GALLERY LOGIC ---
+// --- 8. GALLERY LOGIC (ENGLISH TITLES) ---
 const galleryData = [
-    // --- CATEGORIE: RANDO ---
-    { src: "img/rando/IMG-20240613-WA0006.jpg", category: "rando", title: "Rando 01" },
-    { src: "img/rando/IMG-20240613-WA0026.jpg", category: "rando", title: "Rando 02" },
+    // RANDO -> HIKING
+    { src: "img/rando/IMG-20240613-WA0006.jpg", category: "rando", title: "Hiking 01" },
+    { src: "img/rando/IMG-20240613-WA0026.jpg", category: "rando", title: "Hiking 02" },
     { src: "img/rando/PXL_20240404_133717020.MP.jpg", category: "rando", title: "Nature" },
-    { src: "img/rando/PXL_20240509_115021536.jpg", category: "rando", title: "Paysage" },
+    { src: "img/rando/PXL_20240509_115021536.jpg", category: "rando", title: "Landscape" },
     { src: "img/rando/PXL_20240509_154649039.jpg", category: "rando", title: "Panorama" },
-    { src: "img/rando/PXL_20240510_115728184.MP.jpg", category: "rando", title: "Montagne" },
-    { src: "img/rando/PXL_20240610_151204175.MP.jpg", category: "rando", title: "Vue" },
-    { src: "img/rando/PXL_20240611_101228498.MP.jpg", category: "rando", title: "Sommet" },
-    { src: "img/rando/PXL_20240611_102142405.TS~2.mp4", category: "rando", title: "Vidéo Rando", type: "video" },
-    { src: "img/rando/PXL_20240612_125657899.jpg", category: "rando", title: "Sentier" },
-    { src: "img/rando/PXL_20250417_144541505.jpg", category: "rando", title: "Evasion" },
-    { src: "img/rando/PXL_20250417_145349337.jpg", category: "rando", title: "Forêt" },
+    { src: "img/rando/PXL_20240510_115728184.MP.jpg", category: "rando", title: "Mountain" },
+    { src: "img/rando/PXL_20240610_151204175.MP.jpg", category: "rando", title: "View" },
+    { src: "img/rando/PXL_20240611_101228498.MP.jpg", category: "rando", title: "Summit" },
+    { src: "img/rando/PXL_20240611_102142405.TS~2.mp4", category: "rando", title: "Video Hiking", type: "video" },
+    { src: "img/rando/PXL_20240612_125657899.jpg", category: "rando", title: "Path" },
+    { src: "img/rando/PXL_20250417_144541505.jpg", category: "rando", title: "Escape" },
+    { src: "img/rando/PXL_20250417_145349337.jpg", category: "rando", title: "Forest" },
     { src: "img/rando/PXL_20250418_080731353.jpg", category: "rando", title: "Horizon" },
 
-    // --- CATEGORIE: FOOT ---
+    // FOOT -> FOOTBALL
     { src: "img/foot/_DSC0743.JPG", category: "football", title: "Action" },
     { src: "img/foot/_DSC0787.JPG", category: "football", title: "Focus" },
-    { src: "img/foot/_DSC1058.JPG", category: "football", title: "Terrain" },
-    { src: "img/foot/_DSC1112.JPG", category: "football", title: "Jeu" },
-    { src: "img/foot/_DSC1123.JPG", category: "football", title: "Equipe" },
+    { src: "img/foot/_DSC1058.JPG", category: "football", title: "Field" },
+    { src: "img/foot/_DSC1112.JPG", category: "football", title: "Game" },
+    { src: "img/foot/_DSC1123.JPG", category: "football", title: "Team" },
     { src: "img/foot/_DSC1139.JPG", category: "football", title: "Momentum" },
     { src: "img/foot/_DSC4017.JPG", category: "football", title: "Portrait" },
-    { src: "img/foot/_DSC4145.jpg", category: "football", title: "Détail" },
+    { src: "img/foot/_DSC4145.jpg", category: "football", title: "Detail" },
     { src: "img/foot/_DSC4238.jpg", category: "football", title: "Intensity" },
-    { src: "img/foot/Snapchat-1369129726.jpg", category: "football", title: "Vestiaire" },
+    { src: "img/foot/Snapchat-1369129726.jpg", category: "football", title: "Locker Room" },
     { src: "img/foot/Snapchat-1810924875.jpg", category: "football", title: "Victory" },
     { src: "img/foot/Snapchat-2143698932.jpg", category: "football", title: "Squad" },
 
-    // --- CATEGORIE: CHIMIE ---
+    // CHEMISTRY
     { src: "img/chemistry/PXL_20250207_103257388.MP.jpg", category: "chemistry", title: "Lab Bench" },
     { src: "img/chemistry/PXL_20250311_105322430.MP.jpg", category: "chemistry", title: "Experiment" },
     { src: "img/chemistry/PXL_20250204_112614333.TS (1).mp4", category: "chemistry", title: "Reaction Live", type: "video" },
 
-    // --- CATEGORIE: DIVERS ---
-    { src: "img/divers/IMG-20241104-WA0056.jpg", category: "divers", title: "Divers 01" },
-    { src: "img/divers/PXL_20240404_143449854.MP.jpg", category: "divers", title: "Divers 02" },
-    { src: "img/divers/PXL_20240430_115150490.MP.jpg", category: "divers", title: "Divers 03" },
-    { src: "img/divers/PXL_20240430_141022123.jpg", category: "divers", title: "Divers 04" },
-    { src: "img/divers/PXL_20240430_152853454.MP.jpg", category: "divers", title: "Divers 05" },
-    { src: "img/divers/PXL_20240501_110535232.MP~2.jpg", category: "divers", title: "Divers 06" },
-    { src: "img/divers/PXL_20240501_141048283.MP.jpg", category: "divers", title: "Divers 07" },
-    { src: "img/divers/PXL_20240501_161931526.MP.jpg", category: "divers", title: "Divers 08" },
-    { src: "img/divers/PXL_20240502_103342142.MP.jpg", category: "divers", title: "Divers 09" },
-    { src: "img/divers/PXL_20240502_122422088.jpg", category: "divers", title: "Divers 10" },
-    { src: "img/divers/PXL_20240503_072452746.MP.jpg", category: "divers", title: "Divers 11" },
-    { src: "img/divers/PXL_20240610_145115800.jpg", category: "divers", title: "Divers 12" },
-    { src: "img/divers/PXL_20241028_171733890.MP.jpg", category: "divers", title: "Divers 13" },
-    { src: "img/divers/PXL_20241029_144935063.MP.jpg", category: "divers", title: "Divers 14" },
-    { src: "img/divers/PXL_20241029_155820667.MP.jpg", category: "divers", title: "Divers 15" },
-    { src: "img/divers/PXL_20241029_161336828.MP.jpg", category: "divers", title: "Divers 16" },
-    { src: "img/divers/PXL_20241030_120609962.MP.jpg", category: "divers", title: "Divers 17" },
-    { src: "img/divers/PXL_20241030_125011597.MP.jpg", category: "divers", title: "Divers 18" },
-    { src: "img/divers/PXL_20250222_121716921.jpg", category: "divers", title: "Divers 19" },
-    { src: "img/divers/PXL_20250222_182327467.MP.jpg", category: "divers", title: "Divers 20" },
-    { src: "img/divers/PXL_20251207_111614361.jpg", category: "divers", title: "Divers 21" },
-    { src: "img/divers/PXL_20251207_124624140.jpg", category: "divers", title: "Divers 22" },
-    { src: "img/divers/PXL_20251207_125027441.jpg", category: "divers", title: "Divers 23" },
-    { src: "img/divers/PXL_20251207_150549051.jpg", category: "divers", title: "Divers 24" },
-    { src: "img/divers/PXL_20251208_103809877.MP.jpg", category: "divers", title: "Divers 25" },
-    { src: "img/divers/PXL_20251208_115309536.MP.jpg", category: "divers", title: "Divers 26" },
-    { src: "img/divers/PXL_20251208_124930571.jpg", category: "divers", title: "Divers 27" },
-    { src: "img/divers/PXL_20251208_125539137.jpg", category: "divers", title: "Divers 28" },
-    { src: "img/divers/PXL_20251210_103910668.MP~2.jpg", category: "divers", title: "Divers 29" },
-    { src: "img/divers/PXL_20251210_124353964.jpg", category: "divers", title: "Divers 30" },
-    { src: "img/divers/PXL_20251210_151035439.jpg", category: "divers", title: "Divers 31" },
-    { src: "img/divers/PXL_20251211_102510652.MP.jpg", category: "divers", title: "Divers 32" },
-    { src: "img/divers/PXL_20251211_103717038.jpg", category: "divers", title: "Divers 33" },
-    { src: "img/divers/PXL_20251211_132621768.jpg", category: "divers", title: "Divers 34" },
-    { src: "img/divers/PXL_20251212_114004787.jpg", category: "divers", title: "Divers 35" },
-    { src: "img/divers/PXL_20251212_115545105.jpg", category: "divers", title: "Divers 36" },
-    { src: "img/divers/PXL_20251212_115847409.jpg", category: "divers", title: "Divers 37" },
-    { src: "img/divers/PXL_20251212_122215181.jpg", category: "divers", title: "Divers 38" },
-    { src: "img/divers/PXL_20251212_143828838.jpg", category: "divers", title: "Divers 39" },
-    { src: "img/divers/PXL_20251212_145230634.jpg", category: "divers", title: "Divers 40" },
-    { src: "img/divers/PXL_20251212_145826858.jpg", category: "divers", title: "Divers 41" },
-    { src: "img/divers/PXL_20251212_154027793.jpg", category: "divers", title: "Divers 42" },
-    { src: "img/divers/PXL_20251212_154906082.MP.jpg", category: "divers", title: "Divers 43" },
-    { src: "img/divers/PXL_20251213_125847602.jpg", category: "divers", title: "Divers 44" },
-    { src: "img/divers/Snapchat-1382514375.jpg", category: "divers", title: "Divers 45" }
+    // DIVERS -> MISC
+    { src: "img/divers/IMG-20241104-WA0056.jpg", category: "divers", title: "Misc 01" },
+    { src: "img/divers/PXL_20240404_143449854.MP.jpg", category: "divers", title: "Misc 02" },
+    { src: "img/divers/PXL_20240430_115150490.MP.jpg", category: "divers", title: "Misc 03" },
+    { src: "img/divers/PXL_20240430_141022123.jpg", category: "divers", title: "Misc 04" },
+    { src: "img/divers/PXL_20240430_152853454.MP.jpg", category: "divers", title: "Misc 05" },
+    { src: "img/divers/PXL_20240501_110535232.MP~2.jpg", category: "divers", title: "Misc 06" },
+    { src: "img/divers/PXL_20240501_141048283.MP.jpg", category: "divers", title: "Misc 07" },
+    { src: "img/divers/PXL_20240501_161931526.MP.jpg", category: "divers", title: "Misc 08" },
+    { src: "img/divers/PXL_20240502_103342142.MP.jpg", category: "divers", title: "Misc 09" },
+    { src: "img/divers/PXL_20240502_122422088.jpg", category: "divers", title: "Misc 10" },
+    { src: "img/divers/PXL_20240503_072452746.MP.jpg", category: "divers", title: "Misc 11" },
+    { src: "img/divers/PXL_20240610_145115800.jpg", category: "divers", title: "Misc 12" },
+    { src: "img/divers/PXL_20241028_171733890.MP.jpg", category: "divers", title: "Misc 13" },
+    { src: "img/divers/PXL_20241029_144935063.MP.jpg", category: "divers", title: "Misc 14" },
+    { src: "img/divers/PXL_20241029_155820667.MP.jpg", category: "divers", title: "Misc 15" },
+    { src: "img/divers/PXL_20241029_161336828.MP.jpg", category: "divers", title: "Misc 16" },
+    { src: "img/divers/PXL_20241030_120609962.MP.jpg", category: "divers", title: "Misc 17" },
+    { src: "img/divers/PXL_20241030_125011597.MP.jpg", category: "divers", title: "Misc 18" },
+    { src: "img/divers/PXL_20250222_121716921.jpg", category: "divers", title: "Misc 19" },
+    { src: "img/divers/PXL_20250222_182327467.MP.jpg", category: "divers", title: "Misc 20" },
+    { src: "img/divers/PXL_20251207_111614361.jpg", category: "divers", title: "Misc 21" },
+    { src: "img/divers/PXL_20251207_124624140.jpg", category: "divers", title: "Misc 22" },
+    { src: "img/divers/PXL_20251207_125027441.jpg", category: "divers", title: "Misc 23" },
+    { src: "img/divers/PXL_20251207_150549051.jpg", category: "divers", title: "Misc 24" },
+    { src: "img/divers/PXL_20251208_103809877.MP.jpg", category: "divers", title: "Misc 25" },
+    { src: "img/divers/PXL_20251208_115309536.MP.jpg", category: "divers", title: "Misc 26" },
+    { src: "img/divers/PXL_20251208_124930571.jpg", category: "divers", title: "Misc 27" },
+    { src: "img/divers/PXL_20251208_125539137.jpg", category: "divers", title: "Misc 28" },
+    { src: "img/divers/PXL_20251210_103910668.MP~2.jpg", category: "divers", title: "Misc 29" },
+    { src: "img/divers/PXL_20251210_124353964.jpg", category: "divers", title: "Misc 30" },
+    { src: "img/divers/PXL_20251210_151035439.jpg", category: "divers", title: "Misc 31" },
+    { src: "img/divers/PXL_20251211_102510652.MP.jpg", category: "divers", title: "Misc 32" },
+    { src: "img/divers/PXL_20251211_103717038.jpg", category: "divers", title: "Misc 33" },
+    { src: "img/divers/PXL_20251211_132621768.jpg", category: "divers", title: "Misc 34" },
+    { src: "img/divers/PXL_20251212_114004787.jpg", category: "divers", title: "Misc 35" },
+    { src: "img/divers/PXL_20251212_115545105.jpg", category: "divers", title: "Misc 36" },
+    { src: "img/divers/PXL_20251212_115847409.jpg", category: "divers", title: "Misc 37" },
+    { src: "img/divers/PXL_20251212_122215181.jpg", category: "divers", title: "Misc 38" },
+    { src: "img/divers/PXL_20251212_143828838.jpg", category: "divers", title: "Misc 39" },
+    { src: "img/divers/PXL_20251212_145230634.jpg", category: "divers", title: "Misc 40" },
+    { src: "img/divers/PXL_20251212_145826858.jpg", category: "divers", title: "Misc 41" },
+    { src: "img/divers/PXL_20251212_154027793.jpg", category: "divers", title: "Misc 42" },
+    { src: "img/divers/PXL_20251212_154906082.MP.jpg", category: "divers", title: "Misc 43" },
+    { src: "img/divers/PXL_20251213_125847602.jpg", category: "divers", title: "Misc 44" },
+    { src: "img/divers/Snapchat-1382514375.jpg", category: "divers", title: "Misc 45" }
 ];
 
 const gridContainer = document.getElementById('full-gallery-grid');
@@ -411,7 +366,6 @@ function updateLightboxContent() {
     const wrapper = document.getElementById('lightbox-content-wrapper');
 
     // 2. Nettoyage : Supprimer UNIQUEMENT si c'est une vidéo créée dynamiquement
-    // On ne touche PAS à l'image lightboxImg ici
     const existingVideo = wrapper.querySelector('video');
     if(existingVideo) {
         existingVideo.remove();
@@ -421,10 +375,7 @@ function updateLightboxContent() {
     const isVideo = item.src.toLowerCase().endsWith('.mp4') || item.type === 'video';
 
     if (isVideo) {
-        // Cacher l'image par défaut
         lightboxImg.style.display = 'none';
-
-        // Créer et insérer la vidéo
         const vid = document.createElement('video');
         vid.src = item.src;
         vid.controls = true;
@@ -432,16 +383,11 @@ function updateLightboxContent() {
         vid.style.maxWidth = "100%";
         vid.style.maxHeight = "85vh";
         vid.style.boxShadow = "0 0 50px rgba(255,255,255,0.1)";
-        vid.id = "lightbox-video-dynamic"; // ID unique pour la vidéo
-        
+        vid.id = "lightbox-video-dynamic"; 
         wrapper.appendChild(vid);
-
     } else {
-        // C'est une image : On s'assure qu'elle est visible
         lightboxImg.style.display = 'block';
         lightboxImg.src = item.src;
-        
-        // On ne change PAS l'ID de l'image pour éviter les conflits
     }
     
     // 4. Mettre à jour la légende
@@ -476,12 +422,10 @@ if(lbNext) {
     });
 }
 
-// Initialisation de la grille principale
+// Initialisation de la grille principale (SANS TITRES SUR LES OVERLAYS)
 function initGallery() {
     if(!gridContainer) return;
     gridContainer.innerHTML = '';
-    
-    // Par défaut, la liste lightbox est toute la galerie
     currentLightboxList = galleryData;
 
     galleryData.forEach((item, index) => {
@@ -509,33 +453,28 @@ function initGallery() {
         } else {
             mediaElement = document.createElement('img');
             mediaElement.src = item.src;
-            mediaElement.alt = ""; // Empty alt to avoid text display glitch
+            mediaElement.alt = ""; 
             mediaElement.loading = "lazy";
         }
         
         const overlay = document.createElement('div');
         overlay.classList.add('gallery-overlay');
-        // AMÉLIORATION 5 : Titre supprimé dans le HTML généré
+        // IMPORTANT: OVERLAY VIDE POUR NE PAS AFFICHER LE TITRE DANS LA GRILLE
         overlay.innerHTML = `<div class="overlay-content"></div>`;
         
         div.appendChild(mediaElement);
         div.appendChild(overlay);
         gridContainer.appendChild(div);
 
-        // Click event pour la grille complète
         div.addEventListener('click', () => {
-            // On recalcule l'index basé sur la liste filtrée actuelle (visible)
             const visibleItems = Array.from(document.querySelectorAll('#full-gallery-grid .gallery-item'))
                                       .filter(el => el.style.display !== 'none');
-            // Trouver l'index de l'élément cliqué parmi les visibles
             const clickedIndex = visibleItems.indexOf(div);
             
-            // Reconstruire la liste de données correspondant aux éléments visibles
             const currentDataList = visibleItems.map(el => {
-                // Trouver l'objet data correspondant à cet élément DOM (un peu hacky mais fonctionnel via src)
                 const src = el.querySelector('img, video').getAttribute('src');
                 return galleryData.find(d => d.src === src);
-            }).filter(Boolean); // Filtrer les undefined
+            }).filter(Boolean);
 
             openLightbox(currentDataList, clickedIndex);
         });
@@ -573,28 +512,22 @@ if(lightboxClose) {
     });
 }
 
-// AMÉLIORATION 3 & 4 : Clic sur les images de la page d'accueil (Life Samples)
+// Clic sur les images de la page d'accueil (Life Samples)
 const homePagePreviews = document.querySelectorAll('.gallery-preview-grid .gallery-item');
 homePagePreviews.forEach(item => {
     item.addEventListener('click', (e) => {
-        // Empêcher les comportements par défaut
         e.preventDefault();
-        
         let src;
         
-        // Cas spécial du carrousel
         if(item.id === 'mini-carousel-container') {
-            // Cherche l'image active
             const activeImg = item.querySelector('.carousel-img.active');
             if(activeImg) {
                 src = activeImg.getAttribute('src');
             } else {
-                // Fallback : Si aucune active (bug), prend la première image disponible
                 const firstImg = item.querySelector('.carousel-img');
                 if(firstImg) src = firstImg.getAttribute('src');
             }
         } else {
-            // Cas normal : image ou target
             src = item.getAttribute('data-preview-target');
             if(!src) {
                 const img = item.querySelector('img');
@@ -603,16 +536,12 @@ homePagePreviews.forEach(item => {
         }
 
         if(src) {
-            // Log pour le debug (appuie sur F12 pour voir si le chemin s'affiche)
             console.log("Tentative ouverture Lightbox avec : ", src);
-
-            // Essayer de trouver cet élément dans galleryData pour avoir le contexte complet
             const foundIndex = galleryData.findIndex(d => d.src === src);
             if(foundIndex !== -1) {
                 openLightbox(galleryData, foundIndex);
             } else {
-                // Fallback si l'image n'est pas dans galleryData
-                const tempObj = { src: src, title: "Aperçu", type: src.toLowerCase().endsWith('.mp4') ? 'video' : 'image' };
+                const tempObj = { src: src, title: "Preview", type: src.toLowerCase().endsWith('.mp4') ? 'video' : 'image' };
                 openLightbox([tempObj], 0);
             }
         } else {

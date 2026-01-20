@@ -116,11 +116,16 @@ function typeEffect() {
     setTimeout(typeEffect, speed);
 }
 
-// --- 3. CAROUSEL DRAG ---
+// --- 3. CAROUSEL (DRAG & ARROWS) ---
 const slider = document.querySelector('.carousel-container');
+const prevBtn = document.getElementById('proj-prev');
+const nextBtn = document.getElementById('proj-next');
+
+// Drag Logic
 let isDown = false;
 let startX;
 let scrollLeft;
+
 slider.addEventListener('mousedown', (e) => {
   isDown = true; slider.classList.add('active');
   startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft;
@@ -133,6 +138,17 @@ slider.addEventListener('mousemove', (e) => {
   const x = e.pageX - slider.offsetLeft;
   const walk = (x - startX) * 2; slider.scrollLeft = scrollLeft - walk;
 });
+
+// Arrow Logic (AMÉLIORATION 1)
+if(prevBtn && nextBtn && slider) {
+    const scrollAmount = 350; // Largeur carte + gap approximatif
+    prevBtn.addEventListener('click', () => {
+        slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    });
+    nextBtn.addEventListener('click', () => {
+        slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    });
+}
 
 // --- 4. SCROLL ANIMATIONS & SPY ---
 const scrollObserver = new IntersectionObserver((entries) => {
@@ -173,230 +189,45 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// --- 5. LABO INTERACTIF ---
-const erlenmeyer = document.getElementById('erlenmeyer');
-const bunsenBurner = document.getElementById('bunsen-burner');
-const bunsenTrigger = document.getElementById('bunsen-trigger');
-const candle = document.getElementById('candle');
-const heatTimerDisplay = document.getElementById('heatTimer');
-const timerValueSpan = document.getElementById('timerValue');
-const resetBtn = document.getElementById('reset-flask-btn');
-const flashOverlay = document.getElementById('flash-overlay');
-const bubbleElements = document.querySelectorAll('.bubble');
-const flaskLiquid = document.getElementById('flask-liquid');
-
-const EXPLOSION_TIME = 5000;
-let heatInterval;
-let remainingTime = EXPLOSION_TIME;
-let isHeating = false;
-let isExploded = false;
-
+// --- 5. DATA COMPETENCES (Avec Couleurs Uniques) ---
 const skillData = {
-    "synthesis": { title: "Organic Synthesis", desc: "Maîtrise des protocoles de synthèse multi-étapes et purification.", proof: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=600&auto=format&fit=crop" },
-    "analysis": { title: "Analytical Chem", desc: "Expertise en RMN, IR, UV-Vis et méthodes chromatographiques.", proof: "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=600&auto=format&fit=crop" },
-    "polymers": { title: "Polymers", desc: "Étude des macromolécules, gélification ionique et encapsulation.", proof: "https://images.unsplash.com/photo-1628595351029-c2bf17511435?q=80&w=600&auto=format&fit=crop" },
-    "materials": { title: "Materials Science", desc: "Synthèse inorganique et caractérisation des solides.", proof: "https://images.unsplash.com/photo-1516981879613-9f5da904015f?q=80&w=600&auto=format&fit=crop" },
-    "hardware": { title: "PC Hardware", desc: "Assemblage et optimisation de systèmes performants.", proof: "https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?q=80&w=600&auto=format&fit=crop" },
-    "network": { title: "Network & NAS", desc: "Gestion de réseaux, stockage RAID et sécurité.", proof: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=600&auto=format&fit=crop" },
-    "softwares": { title: "Scientific Software", desc: "ChemDraw, MestReNova, Python pour la chimie.", proof: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?q=80&w=600&auto=format&fit=crop" },
-    "english": { title: "Scientific English", desc: "Communication et rédaction scientifique en anglais.", proof: "https://images.unsplash.com/photo-1543286386-713df548e9cc?q=80&w=600&auto=format&fit=crop" }
+    "synthesis": {
+        title: "Organic Synthesis",
+        desc: "Architecture moléculaire & Synthèse complexe.",
+        targetModal: "modal-A",
+        color: 0xff4b2b // Orange (Chimie)
+    },
+    "polymers": {
+        title: "Polymers",
+        desc: "Matériaux souples & Encapsulation.",
+        targetModal: "modal-B",
+        color: 0x4b89ff // Bleu (Polymères)
+    },
+     "analysis": {
+        title: "Analytical Chem",
+        desc: "Spectroscopie & Identification.",
+        targetModal: "modal-C",
+        color: 0xa855f7 // Violet (Précision)
+    },
+    "hardware": {
+        title: "Hardware & IT",
+        desc: "Architecture Serveur & Optimisation.",
+        targetModal: "modal-D",
+        color: 0x00e676 // Vert Matrix (Tech)
+    },
+    "sustainability": {
+        title: "Green Chemistry",
+        desc: "Valorisation CO2 & Cycles durables.",
+        targetModal: "modal-E",
+        color: 0x00d2d3 // Turquoise (Écologie)
+    },
+     "modeling": {
+        title: "Modeling",
+        desc: "Simulation in-silico & Docking.",
+        targetModal: "modal-F",
+        color: 0xff9f43 // Jaune (Calcul)
+    }
 };
-
-let bubblesPhysics = [];
-let physicsAnimationFrame = null;
-
-function initBubblePhysics() {
-    bubblesPhysics = [];
-    if (physicsAnimationFrame) cancelAnimationFrame(physicsAnimationFrame);
-    physicsAnimationFrame = null;
-    const liquidRect = flaskLiquid.getBoundingClientRect();
-    const width = liquidRect.width;
-    const height = liquidRect.height;
-    
-    bubbleElements.forEach((el) => {
-        let x = Math.random() * (width - 50);
-        let y = Math.random() * (height - 50);
-        let vx = (Math.random() - 0.5) * 0.1; 
-        let vy = (Math.random() - 0.5) * 0.1;
-        bubblesPhysics.push({ el: el, x: x, y: y, vx: vx, vy: vy, radius: 20 });
-        el.style.transform = `translate(${x}px, ${y}px)`;
-    });
-    physicsLoop();
-}
-
-function physicsLoop() {
-    if (isExploded) { physicsAnimationFrame = null; return; }
-    const bounds = { width: 260, height: 110 }; 
-    const padding = 5;
-
-    bubblesPhysics.forEach(b => {
-        if (isHeating) {
-            b.vx += (Math.random() - 0.5) * 0.5; b.vy += (Math.random() - 0.5) * 0.5;
-            b.vx = Math.max(-4, Math.min(4, b.vx)); b.vy = Math.max(-4, Math.min(4, b.vy));
-        } else {
-            b.vx *= 0.98; b.vy *= 0.98;
-            b.vx += (Math.random() - 0.5) * 0.02; b.vy += (Math.random() - 0.5) * 0.02;
-        }
-        b.x += b.vx; b.y += b.vy;
-        if (b.x < padding) { b.x = padding; b.vx *= -1; }
-        if (b.x > bounds.width - b.radius*2 - padding) { b.x = bounds.width - b.radius*2 - padding; b.vx *= -1; }
-        if (b.y < padding) { b.y = padding; b.vy *= -1; }
-        if (b.y > bounds.height - b.radius*2 - padding) { b.y = bounds.height - b.radius*2 - padding; b.vy *= -1; }
-    });
-
-    for (let i = 0; i < bubblesPhysics.length; i++) {
-        for (let j = i + 1; j < bubblesPhysics.length; j++) {
-            const b1 = bubblesPhysics[i]; const b2 = bubblesPhysics[j];
-            const dx = b2.x - b1.x; const dy = b2.y - b1.y;
-            const dist = Math.sqrt(dx*dx + dy*dy);
-            const minDist = b1.radius + b2.radius;
-            if (dist < minDist) {
-                const angle = Math.atan2(dy, dx);
-                const tx = Math.cos(angle) * minDist; const ty = Math.sin(angle) * minDist;
-                const ax = (tx - dx) * 0.5; const ay = (ty - dy) * 0.5;
-                b1.x -= ax; b1.y -= ay; b2.x += ax; b2.y += ay;
-                const nx = dx / dist; const ny = dy / dist;
-                const dvx = b2.vx - b1.vx; const dvy = b2.vy - b1.vy;
-                const dot = dvx * nx + dvy * ny;
-                if (dot < 0) { b1.vx += dot * nx; b1.vy += dot * ny; b2.vx -= dot * nx; b2.vy -= dot * ny; }
-            }
-        }
-    }
-
-    bubblesPhysics.forEach(b => { b.el.style.transform = `translate(${b.x}px, ${b.y}px)`; b.el.style.left = '0'; b.el.style.top = '0'; });
-    physicsAnimationFrame = requestAnimationFrame(physicsLoop);
-}
-
-window.addEventListener('load', initBubblePhysics);
-
-bubbleElements.forEach(b => {
-    b.addEventListener('click', (e) => {
-        if(isExploded) return;
-        e.stopPropagation();
-        const k = b.getAttribute('data-key');
-        if(skillData[k] || k) {
-            document.getElementById('skill-modal-title').textContent = skillData[k]?.title || k;
-            document.getElementById('skill-modal-desc').textContent = skillData[k]?.desc || "Détails indisponibles.";
-            const proofImg = document.getElementById('skill-proof-img');
-            if(skillData[k]?.proof) { proofImg.src = skillData[k].proof; proofImg.style.display = 'block'; }
-            else { proofImg.style.display = 'none'; }
-            document.getElementById('modal-skill').classList.add('active');
-        }
-    });
-});
-
-/* --- LOGIQUE INTERACTION BOUGIE / BEC BUNSEN (DESKTOP & MOBILE) --- */
-let isDragging = false;
-let offset = { x: 0, y: 0 };
-
-// Click/Tap directement sur le bec pour mobile
-bunsenTrigger.addEventListener('click', () => {
-    if(!isHeating && !isExploded) startHeating();
-});
-
-// Drag Desktop
-candle.addEventListener('mousedown', startDrag);
-candle.addEventListener('touchstart', startDrag, {passive: false});
-
-function startDrag(e) {
-    if (isExploded || isHeating) return;
-    isDragging = true;
-    candle.classList.add('dragging');
-    const clientX = e.clientX || e.touches[0].clientX;
-    const clientY = e.clientY || e.touches[0].clientY;
-    const rect = candle.getBoundingClientRect();
-    offset.x = clientX - rect.left;
-    offset.y = clientY - rect.top;
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('touchmove', drag, {passive: false});
-    document.addEventListener('mouseup', stopDrag);
-    document.addEventListener('touchend', stopDrag);
-}
-
-function drag(e) {
-    if (!isDragging) return;
-    e.preventDefault();
-    const clientX = e.clientX || e.touches[0].clientX;
-    const clientY = e.clientY || e.touches[0].clientY;
-    const labRect = document.getElementById('lab-bench').getBoundingClientRect();
-    
-    // Calcul relatif
-    let newX = clientX - offset.x - labRect.left;
-    let newY = clientY - offset.y - labRect.top;
-    
-    candle.style.left = `${newX}px`;
-    candle.style.top = `${newY}px`;
-    candle.style.bottom = 'auto';
-}
-
-function stopDrag() {
-    if (!isDragging) return;
-    isDragging = false;
-    candle.classList.remove('dragging');
-    document.removeEventListener('mousemove', drag);
-    document.removeEventListener('touchmove', drag);
-    document.removeEventListener('mouseup', stopDrag);
-    document.removeEventListener('touchend', stopDrag);
-    checkIgnition();
-}
-
-function checkIgnition() {
-    const candleRect = candle.getBoundingClientRect();
-    const triggerRect = bunsenTrigger.getBoundingClientRect();
-    // Simple collision detection
-    if (candleRect.left < triggerRect.right && candleRect.right > triggerRect.left &&
-        candleRect.top < triggerRect.bottom && candleRect.bottom > triggerRect.top) {
-        startHeating();
-        // Reset candle position visual
-        candle.style.display = 'none'; 
-    }
-}
-
-function startHeating() {
-    if(isHeating) return;
-    isHeating = true;
-    bunsenBurner.classList.add('active');
-    erlenmeyer.classList.add('boiling');
-    heatTimerDisplay.classList.add('visible');
-    heatInterval = setInterval(() => {
-        remainingTime -= 100;
-        timerValueSpan.textContent = (remainingTime / 1000).toFixed(1);
-        if (remainingTime <= 0) triggerImplosion();
-    }, 100);
-}
-
-function triggerImplosion() {
-    clearInterval(heatInterval);
-    isHeating = false;
-    isExploded = true;
-    bunsenBurner.classList.remove('active');
-    erlenmeyer.classList.remove('boiling');
-    erlenmeyer.classList.remove('imploding');
-    void erlenmeyer.offsetWidth;
-    erlenmeyer.classList.add('imploding');
-    heatTimerDisplay.classList.remove('visible');
-    candle.style.display = 'none';
-    setTimeout(() => {
-        flashOverlay.classList.add('flash-active');
-        erlenmeyer.classList.add('broken');
-        setTimeout(() => {
-            resetBtn.style.display = 'block';
-            flashOverlay.classList.remove('flash-active');
-        }, 1000);
-    }, 500);
-}
-
-resetBtn.addEventListener('click', () => {
-    isExploded = false; isHeating = false;
-    remainingTime = EXPLOSION_TIME; timerValueSpan.textContent = "5.0";
-    erlenmeyer.classList.remove('imploding');
-    erlenmeyer.classList.remove('broken');
-    resetBtn.style.display = 'none';
-    candle.style.display = 'block';
-    // Remettre la bougie à sa place initiale
-    candle.style.top = 'auto'; candle.style.bottom = '50px'; candle.style.left = '250px';
-    initBubblePhysics();
-});
 
 // --- 6. MODALES & BURGER ---
 const openBtns = document.querySelectorAll('.open-modal');
@@ -425,22 +256,23 @@ overlays.forEach(ov => ov.addEventListener('click', (e) => {
     }
 }));
 
-// BURGER MENU LOGIC
 const burger = document.querySelector('.burger');
 const nav = document.querySelector('.nav-links');
 const navLinksItems = document.querySelectorAll('.nav-links li');
 
-burger.addEventListener('click', () => {
-    nav.classList.toggle('nav-active');
-    burger.classList.toggle('toggle');
-    navLinksItems.forEach((link, index) => {
-        if (link.style.animation) {
-            link.style.animation = '';
-        } else {
-            link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
-        }
+if(burger) {
+    burger.addEventListener('click', () => {
+        nav.classList.toggle('nav-active');
+        burger.classList.toggle('toggle');
+        navLinksItems.forEach((link, index) => {
+            if (link.style.animation) {
+                link.style.animation = '';
+            } else {
+                link.style.animation = `navLinkFade 0.5s ease forwards ${index / 7 + 0.3}s`;
+            }
+        });
     });
-});
+}
 
 navLinksItems.forEach(item => {
     item.addEventListener('click', () => {
@@ -450,9 +282,23 @@ navLinksItems.forEach(item => {
     });
 });
 
-// --- 7. GALLERY LOGIC (Avec tes 45 photos) ---
-// ... (COPIE-COLLE LE BLOC DE DONNÉES "galleryData" de l'étape précédente ICI) ...
-// Pour éviter un message trop long, je ne remets pas les 45 lignes, mais tu dois les garder !
+// --- 7. MINI CAROUSEL (Life Samples) ---
+function initMiniCarousel() {
+    const container = document.getElementById('mini-carousel-container');
+    if(!container) return;
+    const images = container.querySelectorAll('.carousel-img');
+    let currentIndex = 0;
+
+    setInterval(() => {
+        images[currentIndex].classList.remove('active');
+        currentIndex = (currentIndex + 1) % images.length;
+        images[currentIndex].classList.add('active');
+    }, 3000); // Change every 3 seconds
+}
+initMiniCarousel();
+
+
+// --- 8. GALLERY LOGIC ---
 const galleryData = [
     // --- CATEGORIE: RANDO ---
     { src: "img/rando/IMG-20240613-WA0006.jpg", category: "rando", title: "Rando 01" },
@@ -543,10 +389,102 @@ const lightboxImg = document.getElementById('lightbox-img');
 const lightboxCaption = document.getElementById('lightbox-caption');
 const lightboxClose = document.querySelector('.lightbox-close');
 
+// Navigation Lightbox Variables
+let currentLightboxList = [];
+let currentLightboxIndex = 0;
+const lbPrev = document.getElementById('lb-prev');
+const lbNext = document.getElementById('lb-next');
+
+// Fonction pour ouvrir la Lightbox avec une liste donnée et un index
+function openLightbox(list, index) {
+    currentLightboxList = list;
+    currentLightboxIndex = index;
+    updateLightboxContent();
+    lightbox.classList.add('active');
+}
+
+function updateLightboxContent() {
+    const item = currentLightboxList[currentLightboxIndex];
+    if(!item) return;
+
+    // 1. Récupérer le conteneur (wrapper)
+    const wrapper = document.getElementById('lightbox-content-wrapper');
+
+    // 2. Nettoyage : Supprimer UNIQUEMENT si c'est une vidéo créée dynamiquement
+    // On ne touche PAS à l'image lightboxImg ici
+    const existingVideo = wrapper.querySelector('video');
+    if(existingVideo) {
+        existingVideo.remove();
+    }
+
+    // 3. Vérifier le type de média
+    const isVideo = item.src.toLowerCase().endsWith('.mp4') || item.type === 'video';
+
+    if (isVideo) {
+        // Cacher l'image par défaut
+        lightboxImg.style.display = 'none';
+
+        // Créer et insérer la vidéo
+        const vid = document.createElement('video');
+        vid.src = item.src;
+        vid.controls = true;
+        vid.autoplay = true;
+        vid.style.maxWidth = "100%";
+        vid.style.maxHeight = "85vh";
+        vid.style.boxShadow = "0 0 50px rgba(255,255,255,0.1)";
+        vid.id = "lightbox-video-dynamic"; // ID unique pour la vidéo
+        
+        wrapper.appendChild(vid);
+
+    } else {
+        // C'est une image : On s'assure qu'elle est visible
+        lightboxImg.style.display = 'block';
+        lightboxImg.src = item.src;
+        
+        // On ne change PAS l'ID de l'image pour éviter les conflits
+    }
+    
+    // 4. Mettre à jour la légende
+    if(lightboxCaption) {
+        lightboxCaption.textContent = item.title;
+        lightboxCaption.style.display = 'block';
+    }
+}
+
+// Navigation Events Lightbox
+if(lbPrev) {
+    lbPrev.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if(currentLightboxIndex > 0) {
+            currentLightboxIndex--;
+        } else {
+            currentLightboxIndex = currentLightboxList.length - 1; // Loop to end
+        }
+        updateLightboxContent();
+    });
+}
+
+if(lbNext) {
+    lbNext.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if(currentLightboxIndex < currentLightboxList.length - 1) {
+            currentLightboxIndex++;
+        } else {
+            currentLightboxIndex = 0; // Loop to start
+        }
+        updateLightboxContent();
+    });
+}
+
+// Initialisation de la grille principale
 function initGallery() {
     if(!gridContainer) return;
     gridContainer.innerHTML = '';
-    galleryData.forEach(item => {
+    
+    // Par défaut, la liste lightbox est toute la galerie
+    currentLightboxList = galleryData;
+
+    galleryData.forEach((item, index) => {
         const div = document.createElement('div');
         div.classList.add('gallery-item');
         div.setAttribute('data-category', item.category);
@@ -571,51 +509,47 @@ function initGallery() {
         } else {
             mediaElement = document.createElement('img');
             mediaElement.src = item.src;
-            mediaElement.alt = item.title;
+            mediaElement.alt = ""; // Empty alt to avoid text display glitch
             mediaElement.loading = "lazy";
         }
         
         const overlay = document.createElement('div');
         overlay.classList.add('gallery-overlay');
-        overlay.innerHTML = `<div class="overlay-content"><h3>${item.title}</h3></div>`;
+        // AMÉLIORATION 5 : Titre supprimé dans le HTML généré
+        overlay.innerHTML = `<div class="overlay-content"></div>`;
         
         div.appendChild(mediaElement);
         div.appendChild(overlay);
         gridContainer.appendChild(div);
 
+        // Click event pour la grille complète
         div.addEventListener('click', () => {
-            lightbox.classList.add('active');
-            lightboxCaption.textContent = item.title;
-            const existingContent = lightbox.querySelector('img, video');
-            if(existingContent) existingContent.remove();
+            // On recalcule l'index basé sur la liste filtrée actuelle (visible)
+            const visibleItems = Array.from(document.querySelectorAll('#full-gallery-grid .gallery-item'))
+                                      .filter(el => el.style.display !== 'none');
+            // Trouver l'index de l'élément cliqué parmi les visibles
+            const clickedIndex = visibleItems.indexOf(div);
+            
+            // Reconstruire la liste de données correspondant aux éléments visibles
+            const currentDataList = visibleItems.map(el => {
+                // Trouver l'objet data correspondant à cet élément DOM (un peu hacky mais fonctionnel via src)
+                const src = el.querySelector('img, video').getAttribute('src');
+                return galleryData.find(d => d.src === src);
+            }).filter(Boolean); // Filtrer les undefined
 
-            if (isVideo) {
-                const vid = document.createElement('video');
-                vid.src = item.src;
-                vid.controls = true;
-                vid.autoplay = true;
-                vid.style.maxWidth = "90%";
-                vid.style.maxHeight = "80vh";
-                vid.id = "lightbox-media";
-                lightbox.insertBefore(vid, lightboxCaption);
-            } else {
-                const img = document.createElement('img');
-                img.src = item.src;
-                img.style.maxWidth = "90%";
-                img.style.maxHeight = "80vh";
-                img.id = "lightbox-media";
-                lightbox.insertBefore(img, lightboxCaption);
-            }
+            openLightbox(currentDataList, clickedIndex);
         });
     });
 }
 
+// Filtres
 filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         filterBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         const filter = btn.getAttribute('data-filter');
         const items = document.querySelectorAll('#full-gallery-grid .gallery-item');
+        
         items.forEach(item => {
             if(filter === 'all' || item.getAttribute('data-category') === filter) {
                 item.style.display = 'block';
@@ -638,5 +572,280 @@ if(lightboxClose) {
         if(e.target === lightbox) closeLightbox();
     });
 }
+
+// AMÉLIORATION 3 & 4 : Clic sur les images de la page d'accueil (Life Samples)
+const homePagePreviews = document.querySelectorAll('.gallery-preview-grid .gallery-item');
+homePagePreviews.forEach(item => {
+    item.addEventListener('click', (e) => {
+        // Empêcher les comportements par défaut
+        e.preventDefault();
+        
+        let src;
+        
+        // Cas spécial du carrousel
+        if(item.id === 'mini-carousel-container') {
+            // Cherche l'image active
+            const activeImg = item.querySelector('.carousel-img.active');
+            if(activeImg) {
+                src = activeImg.getAttribute('src');
+            } else {
+                // Fallback : Si aucune active (bug), prend la première image disponible
+                const firstImg = item.querySelector('.carousel-img');
+                if(firstImg) src = firstImg.getAttribute('src');
+            }
+        } else {
+            // Cas normal : image ou target
+            src = item.getAttribute('data-preview-target');
+            if(!src) {
+                const img = item.querySelector('img');
+                if(img) src = img.getAttribute('src');
+            }
+        }
+
+        if(src) {
+            // Log pour le debug (appuie sur F12 pour voir si le chemin s'affiche)
+            console.log("Tentative ouverture Lightbox avec : ", src);
+
+            // Essayer de trouver cet élément dans galleryData pour avoir le contexte complet
+            const foundIndex = galleryData.findIndex(d => d.src === src);
+            if(foundIndex !== -1) {
+                openLightbox(galleryData, foundIndex);
+            } else {
+                // Fallback si l'image n'est pas dans galleryData
+                const tempObj = { src: src, title: "Aperçu", type: src.toLowerCase().endsWith('.mp4') ? 'video' : 'image' };
+                openLightbox([tempObj], 0);
+            }
+        } else {
+            console.error("Aucune source trouvée pour cet élément");
+        }
+    });
+});
+
+// --- 8. 3D ATOMIC ARSENAL (SIMPLE & COMPACT) ---
+function init3DArsenal() {
+    const container = document.getElementById('arsenal-3d-container');
+    if (!container) return;
+
+    // 1. Scène & Caméra
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x050810, 0.003);
+
+    const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
+    // Caméra rapprochée sur un atome plus petit pour garder de la marge en haut
+    camera.position.z = 13; 
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
+    container.appendChild(renderer.domElement);
+
+    // 2. Éclairage
+    scene.add(new THREE.AmbientLight(0x111122, 1.5));
+    const mainLight = new THREE.PointLight(0xffffff, 1.5, 50);
+    mainLight.position.set(5, 5, 5);
+    scene.add(mainLight);
+    const rimLight = new THREE.PointLight(0xa855f7, 2, 60);
+    rimLight.position.set(0, 15, -20);
+    scene.add(rimLight);
+
+    // 3. Groupes
+    const coreGroup = new THREE.Group();
+    const electronGroup = new THREE.Group();
+    scene.add(coreGroup);
+    scene.add(electronGroup);
+
+    // --- NOYAU (Taille réduite) ---
+    const coreGeo = new THREE.IcosahedronGeometry(1.8, 1);
+    const coreMat = new THREE.MeshStandardMaterial({ 
+        color: 0xff4b2b, roughness: 0.3, metalness: 0.8,
+        emissive: 0xff4b2b, emissiveIntensity: 0.2, wireframe: true 
+    });
+    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+    coreMesh.userData = { isCore: true };
+    coreGroup.add(coreMesh);
+
+    const innerCore = new THREE.Mesh(
+        new THREE.IcosahedronGeometry(1.3, 4),
+        new THREE.MeshBasicMaterial({ color: 0xff7b5b, transparent: true, opacity: 0.8 })
+    );
+    innerCore.userData = { isCore: true };
+    coreGroup.add(innerCore);
+
+    // --- ÉLECTRONS (Rayon très compact) ---
+    const skillKeys = Object.keys(skillData);
+    const orbitMeshes = [];
+    
+    // Rayon réduit à 5.0 pour laisser de la place au titre en haut
+    const radius = 5.0; 
+
+    skillKeys.forEach((key, index) => {
+        const data = skillData[key];
+        const phi = Math.acos(1 - 2 * (index + 0.5) / skillKeys.length);
+        const theta = Math.PI * (1 + Math.sqrt(5)) * (index + 0.5);
+        const x = radius * Math.cos(theta) * Math.sin(phi);
+        const y = radius * Math.sin(theta) * Math.sin(phi);
+        const z = radius * Math.cos(phi);
+
+        const electronMat = new THREE.MeshPhysicalMaterial({
+            color: data.color, roughness: 0.2, metalness: 0.1, transmission: 0.6, thickness: 2,
+            emissive: data.color, emissiveIntensity: 0.2, transparent: true, opacity: 0.9
+        });
+
+        const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.75, 32, 32), electronMat);
+        
+        sphere.userData = { 
+            key: key, basePos: new THREE.Vector3(x, y, z), currentPos: new THREE.Vector3(x, y, z),
+            velocity: new THREE.Vector3(0, 0, 0), hoverIntensity: 0, isElectron: true, color: data.color 
+        };
+        
+        sphere.position.set(x, y, z);
+        electronGroup.add(sphere);
+        orbitMeshes.push(sphere);
+
+        // Anneaux
+        const ring = new THREE.Mesh(
+            new THREE.TorusGeometry(radius + Math.random()*0.5, 0.015, 16, 100),
+            new THREE.MeshBasicMaterial({ color: data.color, transparent: true, opacity: 0.15 })
+        );
+        ring.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
+        electronGroup.add(ring);
+    });
+
+    // 4. Interaction (Souris & Tooltip)
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    const targetRotation = { x: 0, y: 0 };
+    const tooltip = document.getElementById('arsenal-tooltip');
+    let zeroGravity = false;
+
+    function onMouseMove(event) {
+        const rect = renderer.domElement.getBoundingClientRect();
+        
+        // Coordonnées 3D
+        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+        // Parallaxe
+        targetRotation.x = mouse.y * 0.5; 
+        targetRotation.y = mouse.x * 0.5;
+
+        // --- POSITION DU TITRE SIMPLIFIÉE ---
+        // 1. Position horizontale : Au niveau de la souris
+        tooltip.style.left = event.clientX + 'px';
+        
+        // 2. Position verticale : 20px au-dessus de la souris
+        // Le CSS fait déjà translate(-50%, -100%), donc on se met juste 20px plus haut
+        tooltip.style.top = (event.clientY - 20) + 'px';
+    }
+
+    function onClick(event) {
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects([...orbitMeshes, coreMesh, innerCore]);
+
+        if (intersects.length > 0) {
+            const object = intersects[0].object;
+            if (object.userData.isElectron && !zeroGravity) {
+                const data = skillData[object.userData.key];
+                if (data && data.targetModal) {
+                    const modal = document.getElementById(data.targetModal);
+                    if(modal) {
+                        modal.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    }
+                }
+            } else if (object.userData.isCore) {
+                zeroGravity = !zeroGravity;
+                if(zeroGravity) {
+                    coreMat.emissive.setHex(0xffffff);
+                    container.style.cursor = 'wait';
+                    orbitMeshes.forEach(mesh => {
+                        mesh.userData.velocity.set((Math.random()-0.5)*0.5, (Math.random()-0.5)*0.5, (Math.random()-0.5)*0.5);
+                    });
+                } else {
+                    coreMat.emissive.setHex(0xff4b2b);
+                    container.style.cursor = 'default';
+                }
+            }
+        }
+    }
+
+    container.addEventListener('mousemove', onMouseMove);
+    container.addEventListener('click', onClick);
+
+    function animate() {
+        requestAnimationFrame(animate);
+        const time = Date.now() * 0.001;
+
+        // Rotation Noyau
+        coreGroup.rotation.x += 0.05 * (targetRotation.x - coreGroup.rotation.x);
+        coreGroup.rotation.y += 0.05 * (targetRotation.y - coreGroup.rotation.y);
+        
+        const pulse = 1 + Math.sin(time * 2) * 0.05;
+        coreMesh.scale.setScalar(pulse);
+        innerCore.rotation.y -= 0.02;
+
+        // Rotation Électrons
+        if(!zeroGravity) {
+            electronGroup.rotation.y += 0.003; 
+            electronGroup.rotation.z = Math.sin(time * 0.2) * 0.1;
+            orbitMeshes.forEach(mesh => mesh.position.lerp(mesh.userData.basePos, 0.05));
+        } else {
+            orbitMeshes.forEach(mesh => {
+                mesh.position.add(mesh.userData.velocity);
+                mesh.rotation.x += 0.05;
+            });
+            electronGroup.rotation.y += 0.001;
+        }
+
+        // Raycasting
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(orbitMeshes);
+        
+        if (intersects.length === 0) {
+            tooltip.style.opacity = '0';
+            container.style.cursor = zeroGravity ? 'wait' : 'grab';
+        }
+
+        orbitMeshes.forEach(mesh => {
+            const isHovered = (intersects.length > 0 && intersects[0].object === mesh);
+            
+            if (isHovered && !zeroGravity) {
+                container.style.cursor = 'pointer';
+                const key = mesh.userData.key;
+                const colorHex = skillData[key].color.toString(16).padStart(6, '0');
+                
+                tooltip.innerHTML = `
+                    <strong style="color:#${colorHex}">${skillData[key].title}</strong><br>
+                    <span style="font-size:0.8em; font-weight:400; color:#ccc;">${skillData[key].desc}</span>
+                `;
+                tooltip.style.opacity = '1';
+                tooltip.style.borderColor = `#${colorHex}`;
+                
+                mesh.userData.hoverIntensity = THREE.MathUtils.lerp(mesh.userData.hoverIntensity, 1, 0.1);
+            } else {
+                mesh.userData.hoverIntensity = THREE.MathUtils.lerp(mesh.userData.hoverIntensity, 0, 0.1);
+            }
+
+            const intensity = mesh.userData.hoverIntensity;
+            mesh.scale.setScalar(1 + intensity * 0.3);
+            mesh.material.emissiveIntensity = 0.2 + intensity * 1.5;
+        });
+
+        renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        renderer.setSize(width, height);
+        camera.aspect = width / height;
+        camera.updateProjectionMatrix();
+    });
+}
+
+document.addEventListener('DOMContentLoaded', init3DArsenal);
 
 window.addEventListener('DOMContentLoaded', initGallery);

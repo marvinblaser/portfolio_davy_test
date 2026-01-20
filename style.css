@@ -11,7 +11,7 @@
 .acid-mode .badge, .acid-mode .modal-tag, .acid-mode .dot { background-color: rgba(0, 255, 0, 0.1) !important; border-color: #00ff00 !important; color: #00ff00 !important; box-shadow: 0 0 10px #00ff00 !important; }
 
 * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
-html, body { width: 100%; overflow-x: hidden; } /* IMPORTANT : Empêche le scroll horizontal */
+html, body { width: 100%; overflow-x: hidden; } 
 body { font-family: var(--font-body); color: var(--text-main); background-color: var(--bg-dark); transition: background 0.5s, color 0.5s; }
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: var(--bg-dark); }
@@ -63,8 +63,8 @@ h1.main-title { font-family: var(--font-heading); font-size: 4.5rem; font-weight
 .section-title::after { content: ''; display: block; width: 60px; height: 4px; background: var(--accent); margin: 15px auto 0; }
 .section-subtitle { text-align: center; margin-top: -30px; margin-bottom: 40px; color: var(--text-muted); font-style: italic; }
 
-/* --- CAROUSEL --- */
-.carousel-wrapper { display: flex; justify-content: center; width: 100%; }
+/* --- CAROUSEL (PROJECTS) --- */
+.carousel-wrapper { display: flex; justify-content: center; width: 100%; position: relative; align-items: center; }
 .carousel-container { display: flex; overflow-x: auto; gap: 2rem; padding: 2rem 1rem; scroll-snap-type: x mandatory; scrollbar-width: none; max-width: 1200px; cursor: grab; }
 .carousel-container.active { cursor: grabbing; cursor: -webkit-grabbing; }
 .carousel-container::-webkit-scrollbar { display: none; }
@@ -86,6 +86,12 @@ h1.main-title { font-family: var(--font-heading); font-size: 4.5rem; font-weight
 .project-card p { font-size: 0.9rem; color: var(--text-muted); margin: 0; }
 .drag-hint { text-align: center; margin-top: 1.5rem; color: #555; font-size: 0.8rem; }
 
+/* Carousel Navigation Arrows */
+.carousel-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: 0.3s; z-index: 10; }
+.carousel-nav:hover { background: var(--accent); border-color: var(--accent); transform: translateY(-50%) scale(1.1); }
+.carousel-nav.prev { left: -20px; }
+.carousel-nav.next { right: -20px; }
+
 /* --- TIMELINE --- */
 .timeline { position: relative; max-width: 900px; margin: 0 auto; }
 .timeline::after { content: ''; position: absolute; width: 4px; background: #2a3b55; top: 0; bottom: 0; left: 50%; margin-left: -2px; z-index: 0; }
@@ -104,8 +110,15 @@ h1.main-title { font-family: var(--font-heading); font-size: 4.5rem; font-weight
 .timeline-content .date { color: var(--accent); font-weight: 700; display: block; margin-bottom: 5px; }
 .timeline-content h3 { font-size: 1.2rem; margin-bottom: 10px; color: #fff; }
 .timeline-content p { font-size: 0.9rem; color: var(--text-muted); }
+
+/* JOB BRANCH GAUCHE (Originale) */
 .job-branch.left-side { position: absolute; left: -40px; top: 30px; display: flex; align-items: center; flex-direction: row-reverse; }
 .job-branch.left-side::before { content: ''; width: 25px; height: 2px; background: var(--accent); display: block; box-shadow: 0 0 5px var(--accent); }
+
+/* JOB BRANCH DROITE (Correction pour éviter le conflit central) */
+.job-branch.right-side { position: absolute; right: -40px; top: 30px; display: flex; align-items: center; flex-direction: row; }
+.job-branch.right-side::before { content: ''; width: 25px; height: 2px; background: var(--accent); display: block; box-shadow: 0 0 5px var(--accent); }
+
 .job-node { width: 30px; height: 30px; background: var(--bg-dark); border: 2px solid var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--accent); cursor: pointer; transition: 0.3s; position: relative; animation: pulse-node 2s infinite; }
 .job-node:hover { background: var(--accent); color: #fff; transform: scale(1.1); }
 .job-tooltip { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(10px); width: 200px; background: #fff; color: #000; padding: 10px; border-radius: 5px; font-size: 0.8rem; text-align: center; opacity: 0; visibility: hidden; transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); pointer-events: none; z-index: 20; }
@@ -154,7 +167,7 @@ h1.main-title { font-family: var(--font-heading); font-size: 4.5rem; font-weight
 .tripod-leg.left { left: 20px; transform: rotate(8deg); }
 .tripod-leg.right { right: 20px; transform: rotate(-8deg); }
 .bunsen-container { position: absolute; bottom: 30px; width: 60px; height: 130px; z-index: 6; display: flex; flex-direction: column; align-items: center; pointer-events: none; }
-.bunsen-trigger { position: absolute; top: 0; width: 40px; height: 30px; z-index: 10; pointer-events: all; cursor: pointer; } /* Clickable on mobile */
+.bunsen-trigger { position: absolute; top: 0; width: 40px; height: 30px; z-index: 10; pointer-events: all; cursor: pointer; } 
 .bunsen-tube { width: 14px; height: 90px; background: linear-gradient(90deg, #666, #999, #666); border: 1px solid #444; position: relative; top: 10px; }
 .bunsen-base { width: 50px; height: 15px; background: #333; border-radius: 50% 50% 5px 5px; margin-top: 10px; box-shadow: 0 5px 10px rgba(0,0,0,0.5); }
 .flame-assembly { position: absolute; top: -50px; width: 20px; height: 70px; opacity: 0; transition: opacity 0.3s; }
@@ -264,8 +277,13 @@ h1.main-title { font-family: var(--font-heading); font-size: 4.5rem; font-weight
 .gallery-preview-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 250px; gap: 15px; max-width: 1200px; margin: 0 auto 2rem; }
 .gallery-action { text-align: center; margin-top: 30px; }
 .gallery-item { position: relative; border-radius: 12px; overflow: hidden; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: all 0.4s ease; }
+/* Modification pour le Mini Carousel */
+.gallery-item.large { position: relative; }
+.carousel-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1s ease-in-out; filter: grayscale(40%); }
+.carousel-img.active { opacity: 1; }
+
 .gallery-item img, .gallery-item video { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; filter: grayscale(40%); }
-.gallery-item:hover img, .gallery-item:hover video { transform: scale(1.1); filter: grayscale(0%); }
+.gallery-item:hover img, .gallery-item:hover video, .gallery-item:hover .carousel-img { transform: scale(1.1); filter: grayscale(0%); }
 .gallery-item:hover { box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-color: var(--accent); z-index: 2; transform: scale(1.02); }
 .gallery-item.large { grid-column: span 2; grid-row: span 2; }
 .gallery-item.wide { grid-column: span 2; }
@@ -287,12 +305,57 @@ h1.main-title { font-family: var(--font-heading); font-size: 4.5rem; font-weight
 .full-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
 .full-grid .gallery-item { height: 200px; border-radius: 8px; }
 .full-grid .gallery-item.hidden { display: none; }
-.lightbox-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 20000; display: none; justify-content: center; align-items: center; flex-direction: column; }
+.lightbox-overlay { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.95); 
+    z-index: 20000; 
+    display: none; 
+    justify-content: space-between; /* Espace entre les flèches et l'image */
+    align-items: center; 
+    flex-direction: row; 
+    padding: 0 20px; /* Marges pour les flèches */
+}
 .lightbox-overlay.active { display: flex; animation: fadeIn 0.3s; }
-.lightbox-close { position: absolute; top: 30px; right: 30px; background: none; border: none; color: #fff; font-size: 3rem; cursor: pointer; transition: 0.3s; }
+.lightbox-close { position: absolute; top: 30px; right: 30px; background: none; border: none; color: #fff; font-size: 3rem; cursor: pointer; transition: 0.3s; z-index: 2001; }
 .lightbox-close:hover { color: var(--accent); transform: scale(1.1); }
-#lightbox-img, #lightbox-media { max-width: 90%; max-height: 80vh; border-radius: 5px; box-shadow: 0 0 50px rgba(0,0,0,0.8); border: 1px solid #333; }
+#lightbox-content-wrapper { 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    flex-grow: 1; 
+    height: 100%;
+    width: 100%; /* Important pour centrer */
+    overflow: hidden;
+    position: relative;
+    flex-direction: column; /* Pour que la légende soit sous l'image */
+}
+#lightbox-img, #lightbox-media { 
+    max-width: 90%; 
+    max-height: 85vh; 
+    border-radius: 5px; 
+    box-shadow: 0 0 50px rgba(255,255,255,0.1); 
+    border: 1px solid #333; 
+    object-fit: contain; /* Assure que l'image garde ses proportions */
+    display: block; /* Force l'affichage */
+    background: #000; /* Fond noir au cas où l'image a de la transparence */
+}
 #lightbox-caption { margin-top: 15px; color: #ccc; font-family: var(--font-heading); font-size: 1.2rem; }
+
+/* Lightbox Navigation */
+.lightbox-nav { 
+    background: none; border: none; 
+    color: rgba(255,255,255,0.5); 
+    font-size: 3rem; 
+    cursor: pointer; 
+    padding: 20px; 
+    transition: 0.3s; 
+    z-index: 2001; 
+    flex-shrink: 0; /* Empêche les flèches d'être écrasées */
+}
+.lightbox-nav:hover { color: var(--accent); transform: scale(1.1);}
+.lightbox-nav.prev { margin-right: 20px; }
+.lightbox-nav.next { margin-left: 20px; }
+
 
 /* FIX SKILL MODAL */
 #modal-skill .modal-wrapper { width: 90%; max-width: 500px; height: auto; max-height: 90vh; overflow-y: auto; padding: 0; display: block; }
@@ -305,13 +368,79 @@ h1.main-title { font-family: var(--font-heading); font-size: 4.5rem; font-weight
 #skill-proof-img { width: 100%; height: auto; max-height: 350px; object-fit: contain; border-radius: 4px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); display: block; }
 #modal-skill .modal-close { top: 15px; right: 15px; width: 30px; height: 30px; font-size: 1.2rem; }
 
-/* ==================== RESPONSIVE QUERIES (COMPLETELY REWORKED) ==================== */
+
+
+
+
+
+/* --- 3D ARSENAL --- */
+#arsenal-3d-container {
+    width: 100%;
+    height: 500px; /* Hauteur réduite pour rapprocher le titre */
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #1a1f2e 0%, #050810 100%);
+    box-shadow: inset 0 0 50px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: grab;
+    margin-top: 10px; /* Marge réduite au minimum */
+}
+
+#arsenal-3d-container:active {
+    cursor: grabbing;
+}
+
+/* DANS style.css */
+
+.arsenal-tooltip {
+    position: fixed; /* Important : "fixed" pour ne pas être coupé par le conteneur */
+    top: 0;
+    left: 0;
+    z-index: 10000; /* Au-dessus de tout */
+    
+    background: rgba(10, 15, 30, 0.95);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 8px 15px;
+    border-radius: 5px;
+    
+    pointer-events: none; /* La souris passe au travers */
+    opacity: 0;
+    
+    /* On centre horizontalement (-50%) et on décale vers le haut (-100%) */
+    transform: translate(-50%, -100%);
+    
+    transition: opacity 0.2s ease;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    box-shadow: 0 0 15px rgba(255, 75, 43, 0.3);
+    white-space: nowrap;
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+    #arsenal-3d-container {
+        height: 450px;
+    }
+}
+
+
+
+
+
+
+/* ==================== RESPONSIVE QUERIES ==================== */
 
 @media (max-width: 1024px) {
     h1.main-title { font-size: 3rem; }
     .gallery-preview-grid { grid-template-columns: repeat(3, 1fr); }
     .gallery-item.large { grid-column: span 2; grid-row: span 2; }
     .gallery-item.wide { grid-column: span 3; }
+    /* Carousel Arrow placement for tablet */
+    .carousel-nav.prev { left: 0; }
+    .carousel-nav.next { right: 0; }
 }
 
 @media (max-width: 900px) {
@@ -327,11 +456,8 @@ h1.main-title { font-family: var(--font-heading); font-size: 4.5rem; font-weight
 }
 
 @media (max-width: 768px) {
-    /* TYPOGRAPHY */
     h1.main-title { font-size: 2.2rem; }
     .section-title { font-size: 1.8rem; }
-    
-    /* NAV MOBILE */
     .burger { display: block; cursor: pointer; position: absolute; right: 20px; z-index: 2000; }
     .logo-mobile { display: block; z-index: 2000; }
     .nav-links {
@@ -345,34 +471,156 @@ h1.main-title { font-family: var(--font-heading); font-size: 4.5rem; font-weight
     .toggle .line2 { opacity: 0; }
     .toggle .line3 { transform: rotate(45deg) translate(-5px, -6px); }
 
-    /* TIMELINE FIX */
     .timeline { padding-left: 10px; }
     .timeline::after { left: 19px; }
     .timeline-scroll-line { left: 19px; }
     .timeline-row { width: 100%; padding-left: 40px; text-align: left; margin-bottom: 30px; }
     .timeline-row::after { left: 12px; right: auto; }
     .timeline-row.left { text-align: left; }
-    .job-branch.left-side { left: -5px; top: -20px; }
+    
+    /* Sur mobile, on remet tout à gauche pour la lisibilité */
+    .job-branch.right-side { right: auto; left: -5px; top: -20px; flex-direction: row-reverse; } 
 
-    /* LAB BENCH FIX (THE ARSENAL) */
     .lab-bench-wrapper { height: 450px; overflow: hidden; }
-    /* On recentre tout et on évite le débordement */
-    .erlenmeyer-container { transform: scale(0.65); bottom: 100px; left: 50%; margin-left: -130px; /* Centre 260px/2 */ }
+    .erlenmeyer-container { transform: scale(0.65); bottom: 100px; left: 50%; margin-left: -130px; }
     .tripod { transform: scale(0.65); bottom: 20px; left: 50%; margin-left: -70px; }
     .bunsen-container { transform: scale(0.8); bottom: 5px; left: 50%; margin-left: -30px; }
-    /* Cache les éléments décoratifs qui prennent de la place */
     .lab-decor-left, .lab-decor-right, .draggable-candle { display: none; }
-    /* Agrandir la zone de clic du Bunsen pour le tactile */
     .bunsen-trigger { width: 80px; height: 80px; top: -20px; left: -20px; }
 
-    /* GALLERY FIX */
     .gallery-preview-grid { grid-template-columns: 1fr; grid-auto-rows: 250px; }
     .gallery-item.large, .gallery-item.wide { grid-column: span 1; grid-row: span 1; }
     
-    /* MODALS */
     .modal-hero { height: 180px; }
     .hero-text h2 { font-size: 1.5rem; }
     .project-gallery { grid-template-columns: 1fr; }
 }
 
 @keyframes navLinkFade { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+
+/* --- NOUVEAUX STYLES POUR MODALES PRO --- */
+
+/* Listes de méthodologie plus propres */
+.method-list {
+    list-style: none;
+    padding: 0;
+}
+.method-list li {
+    margin-bottom: 12px;
+    padding-left: 20px;
+    position: relative;
+    color: #ccc;
+    line-height: 1.6;
+}
+.method-list li::before {
+    content: '•';
+    color: var(--accent);
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+.method-list strong {
+    color: #fff;
+    font-weight: 600;
+}
+
+/* Citations Personnelles */
+.insight-quote {
+    border-left: 4px solid var(--accent);
+    padding: 15px 20px;
+    margin: 30px 0;
+    background: rgba(255, 255, 255, 0.03);
+    color: #a0aab5;
+    font-style: italic;
+    font-family: var(--font-heading);
+    border-radius: 0 10px 10px 0;
+}
+
+/* Bouton Rapport PDF */
+.btn-report {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: var(--accent);
+    color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 15px rgba(255, 75, 43, 0.3);
+}
+.btn-report:hover {
+    background: #ff2a00;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 75, 43, 0.5);
+}
+.btn-report.disabled {
+    background: #333;
+    color: #777;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+.btn-report.disabled:hover {
+    transform: none;
+}
+
+/* --- NOUVEAUX STYLES POUR LA SECTION ABOUT (PERSONA) --- */
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Par défaut sur mobile : 1 colonne */
+    gap: 40px;
+    align-items: center; /* Centre verticalement */
+    margin-top: 40px;
+}
+
+/* Sur les écrans plus larges : 2 colonnes */
+@media (min-width: 992px) {
+    .about-grid {
+        grid-template-columns: 3fr 2fr; /* Le texte prend plus de place que l'image */
+    }
+}
+
+/* Styles pour la colonne image */
+.about-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* Cadre décoratif autour de l'image */
+.image-frame {
+    position: relative;
+    width: 100%;
+    max-width: 400px; /* Largeur maximale de l'image */
+    aspect-ratio: 3 / 4; /* Format portrait classique */
+    border-radius: 20px;
+    /* Création d'une double bordure style "cyber" */
+    background: linear-gradient(135deg, var(--accent), transparent 40%),
+                linear-gradient(315deg, var(--secondary), transparent 40%);
+    padding: 5px; /* Espace pour la bordure dégradée */
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+}
+
+/* L'image elle-même */
+.profile-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Remplit le cadre sans déformer */
+    border-radius: 18px; /* Légèrement moins que le cadre */
+    border: 2px solid var(--bg-secondary); /* Petite bordure intérieure pour détacher l'image */
+    filter: grayscale(20%) contrast(1.1); /* Léger effet stylisé */
+    transition: 0.3s ease;
+}
+
+/* Effet au survol de l'image */
+.image-frame:hover .profile-photo {
+    filter: grayscale(0%) contrast(1); /* Retour à la couleur normale */
+    transform: scale(1.02);
+}
